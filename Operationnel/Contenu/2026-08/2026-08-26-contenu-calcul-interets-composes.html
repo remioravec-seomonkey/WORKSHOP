@@ -1,0 +1,901 @@
+<title>Intérêts composés · Net d'impôts</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,800&family=Mulish:wght@400;500;700;900&family=JetBrains+Mono:wght@500;700&display=swap');
+
+:root{
+  --navy:#003032; --navy-2:#02464A; --navy-3:#04565A; --card:#013134; --line:#1A4548;
+  --green:#9BD64A; --green-soft:#B6E579; --teal:#2E8B7F; --teal-deep:#1B5E5A;
+  --white:#F4F8FB; --muted:#9DB0C4; --ink:#003032; --red:#E55A5A;
+  --shadow:0 24px 60px -20px rgba(0,0,0,.7); --r:20px;
+}
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--navy); color:var(--white);
+  font-family:Mulish,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-size:16.5px; line-height:1.7; -webkit-font-smoothing:antialiased;
+  background-image:
+    radial-gradient(1100px 620px at 12% -8%, rgba(46,139,127,.30), transparent 62%),
+    radial-gradient(900px 560px at 92% 4%, rgba(27,94,90,.34), transparent 60%),
+    radial-gradient(1000px 700px at 50% 108%, rgba(46,139,127,.16), transparent 62%);
+  background-attachment:fixed;
+}
+#bar{position:fixed;top:0;left:0;height:3px;width:0;z-index:99;
+  background:linear-gradient(90deg,var(--teal),var(--green));transition:width .1s linear}
+.wrap{max-width:980px;margin:0 auto;padding:0 26px}
+.display{font-family:Fraunces,Georgia,serif;font-weight:800;letter-spacing:-.5px;line-height:1.12;margin:0}
+.mono{font-family:"JetBrains Mono",ui-monospace,monospace}
+h1.display{font-size:clamp(30px,5.2vw,50px)}
+h2.display{font-size:clamp(23px,3.4vw,32px);margin:0 0 6px}
+h3.display{font-size:19px;margin:0 0 6px}
+h1.display em{font-style:normal;box-shadow:inset 0 -.32em 0 rgba(155,214,74,.30)}
+p{margin:0 0 15px}
+a{color:var(--green-soft)}
+.stage{border-top:1px solid var(--line);padding:74px 0}
+.stage:first-of-type{border-top:0}
+.kicker{font-family:"JetBrains Mono",monospace;font-size:11.5px;letter-spacing:2px;
+  text-transform:uppercase;color:var(--green);margin:0 0 14px}
+.lead{color:var(--muted);font-size:17.5px;max-width:74ch}
+.tl{display:flex;align-items:center;gap:13px;margin:0 0 26px}
+.num{width:38px;height:38px;flex:0 0 38px;border-radius:50%;display:grid;place-items:center;
+  background:var(--teal-deep);border:1px solid var(--line);color:var(--white);
+  font-family:"JetBrains Mono",monospace;font-size:14px;font-weight:700}
+.num.star{background:var(--green);color:var(--ink)}
+.lbl{font-family:"JetBrains Mono",monospace;font-size:11.5px;letter-spacing:1.6px;
+  text-transform:uppercase;color:var(--muted)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);
+  padding:24px 26px;box-shadow:var(--shadow)}
+.card+.card{margin-top:16px}
+.goal{border-left:3px solid var(--green);background:var(--card);border-radius:0 14px 14px 0;
+  padding:18px 22px;margin:20px 0}
+.metaphor{border-left:3px solid var(--teal);background:rgba(46,139,127,.10);
+  border-radius:0 14px 14px 0;padding:16px 22px;margin:20px 0;color:var(--muted);font-size:15px}
+.metaphor b{color:var(--white)}
+.blocked{border-left:3px solid var(--red);background:rgba(229,90,90,.09);
+  border-radius:0 14px 14px 0;padding:18px 22px;margin:20px 0}
+.blocked .tag{color:var(--red)}
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:18px 0}
+.show3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:18px 0}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px}
+.stat .v{font-family:Fraunces,Georgia,serif;font-weight:800;font-size:30px;line-height:1;
+  color:var(--green);letter-spacing:-1px}
+.stat .v.neg{color:var(--red)}
+.stat .k{font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:1.4px;
+  text-transform:uppercase;color:var(--muted);margin-top:9px}
+.stat .s{font-size:13.5px;color:var(--muted);margin-top:7px;line-height:1.55}
+.tblwrap{overflow-x:auto;border:1px solid var(--line);border-radius:14px;margin:18px 0;
+  -webkit-overflow-scrolling:touch}
+table.sheet{width:100%;border-collapse:collapse;font-size:14px;min-width:640px}
+table.sheet th{background:var(--navy-3);color:var(--white);text-align:left;padding:11px 13px;
+  font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:1.1px;text-transform:uppercase;
+  font-weight:700;white-space:nowrap;border-bottom:1px solid var(--line)}
+table.sheet td{padding:10px 13px;border-bottom:1px solid var(--line);vertical-align:top;color:var(--white)}
+table.sheet tr:last-child td{border-bottom:0}
+table.sheet tr:nth-child(even) td{background:rgba(255,255,255,.022)}
+table.sheet td.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+table.sheet th.n{text-align:right}
+.pill{display:inline-block;font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:1px;
+  text-transform:uppercase;padding:3px 9px;border-radius:999px;border:1px solid var(--line);
+  background:var(--navy-2);color:var(--muted);white-space:nowrap}
+.pill.ok{background:rgba(155,214,74,.14);border-color:rgba(155,214,74,.36);color:var(--green)}
+.pill.no{background:rgba(229,90,90,.14);border-color:rgba(229,90,90,.36);color:var(--red)}
+.pill.tl2{background:rgba(46,139,127,.16);border-color:rgba(46,139,127,.4);color:#7FD3C6}
+.def{border-bottom:1px dashed var(--teal);cursor:help;position:relative}
+.def:hover::after{content:attr(data-def);position:absolute;left:0;bottom:135%;z-index:20;
+  width:280px;background:var(--navy-3);border:1px solid var(--line);border-radius:12px;
+  padding:11px 13px;font-size:13px;line-height:1.55;color:var(--white);box-shadow:var(--shadow);
+  font-family:Mulish,sans-serif;font-weight:400}
+ul.clean{margin:0 0 15px;padding-left:20px}
+ul.clean li{margin:0 0 8px}
+.meta-row{display:flex;flex-wrap:wrap;gap:9px;margin-top:22px}
+.chip{font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.6px;padding:7px 13px;
+  border-radius:999px;border:1px solid var(--line);background:var(--card);color:var(--muted)}
+.chip b{color:var(--green);font-weight:700}
+.reveal{opacity:0;transform:translateY(26px);transition:opacity .6s cubic-bezier(.2,.7,.2,1),transform .6s cubic-bezier(.2,.7,.2,1)}
+.reveal.in{opacity:1;transform:none}
+.mug{width:54px;height:54px}
+footer.ft{border-top:1px solid var(--line);padding:40px 0 60px;color:var(--muted);font-size:14px}
+
+.display{text-wrap:balance}
+.stage > .wrap > p,
+.stage > .wrap > ul.clean{max-width:68ch}
+.card p,.goal p,.blocked p,.metaphor{max-width:70ch}
+a:focus-visible,summary:focus-visible,button:focus-visible,
+input:focus-visible,select:focus-visible,.def:focus-visible{
+  outline:2px solid var(--green);outline-offset:3px;border-radius:6px}
+.def:focus-visible::after{content:attr(data-def);position:absolute;left:0;bottom:135%;z-index:20;
+  width:280px;background:var(--navy-3);border:1px solid var(--line);border-radius:12px;
+  padding:11px 13px;font-size:13px;line-height:1.55;color:var(--white);box-shadow:var(--shadow);
+  font-family:Mulish,sans-serif;font-weight:400}
+@media (prefers-reduced-motion:reduce){
+  .reveal{opacity:1 !important;transform:none !important;transition:none !important}
+  #bar{transition:none}
+  *{scroll-behavior:auto !important}
+}
+@media(max-width:760px){
+  .duo,.show3{grid-template-columns:1fr}
+  .stage{padding:54px 0}
+  .card{padding:20px 18px}
+}
+</style>
+
+<div id="bar"></div>
+
+<!-- ============ HERO ============ -->
+<section class="stage" style="padding-top:60px">
+  <div class="wrap">
+    <svg class="mug" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+      <rect x="8" y="18" width="36" height="34" rx="9" fill="#013134" stroke="#2E8B7F" stroke-width="2.5"/>
+      <path d="M44 26h6a8 8 0 0 1 0 16h-6" stroke="#2E8B7F" stroke-width="2.5" fill="none"/>
+      <path d="M19 12c0 3-3 3-3 6M27 10c0 3-3 3-3 6M35 12c0 3-3 3-3 6" stroke="#9BD64A" stroke-width="2.5" stroke-linecap="round"/>
+      <circle cx="21" cy="34" r="2.6" fill="#9BD64A"/><circle cx="31" cy="34" r="2.6" fill="#9BD64A"/>
+      <path d="M20 42c3 3 9 3 12 0" stroke="#9BD64A" stroke-width="2.2" stroke-linecap="round" fill="none"/>
+    </svg>
+    <p class="kicker" style="margin-top:18px">Opérationnel contenu · relevé du 26 août 2026</p>
+    <h1 class="display">Calcul intérêts composés :<br>la place est <em>au net d'impôts</em></h1>
+    <p class="lead" style="margin-top:18px">
+      Les cinq premiers résultats calculent tous le <b>brut</b>. Aucun n'affiche ce qui reste
+      après le prélèvement forfaitaire unique passé à 31,4 % au 1<sup>er</sup> janvier 2026.
+      Sur le scénario par défaut du n°1, l'écart est de <b>10 398 €</b>. C'est l'angle, et il est
+      mesuré, pas supposé.
+    </p>
+    <div class="meta-row">
+      <span class="chip">Requête · <b>calcul intérêts composés</b></span>
+      <span class="chip">Volume · <b>3 600</b>/mois</span>
+      <span class="chip">KD · <b>6</b></span>
+      <span class="chip">Cluster · <b>13 000</b>/mois</span>
+      <span class="chip">AI Overview · <b>absent</b></span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CONFIG MANQUANTE ============ -->
+<section class="stage">
+  <div class="wrap">
+    <div class="blocked reveal">
+      <p class="kicker tag" style="margin-bottom:8px">⚠ Configuration absente — signalé en tête de livrable</p>
+      <p style="margin-bottom:10px">Aucun <span class="mono">client.json</span> dans le dossier de travail, et aucun dépôt client rattaché.
+      Trois étapes du process tournent donc à vide et sont marquées <b>bloquées</b>, jamais cochées par défaut :</p>
+      <ul class="clean" style="margin-bottom:12px">
+        <li><b>Étape 1 — anti-cannibalisation.</b> Il faut la propriété Search Console. Question précise : <i>quelle est la propriété GSC et le domaine du client visé ?</i></li>
+        <li><b>Étape 3 — pages sœurs.</b> Il faut le sitemap. Le gabarit ci-dessous est donc dérivé du relevé SERP seul, et il deviendra la référence des suivantes.</li>
+        <li><b>Bloc 4 et 5 du brief — maillage.</b> Toutes les URL internes sortent en <span class="mono">[LIEN À FOURNIR]</span>. Aucune URL devinée.</li>
+      </ul>
+      <p style="margin:0;color:var(--muted);font-size:14.5px">Les seuils du bloc 7 appliquent les <b>défauts du schéma</b> : title 60, meta 155, 2 CTA, 4 questions FAQ, paragraphes 4 lignes.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ÉTAPE 2 — SERP ============ -->
+<section class="stage">
+  <div class="wrap">
+    <div class="tl reveal"><span class="num">2</span><span class="lbl">Analyse SERP top 5 — le cœur du process</span></div>
+    <h2 class="display reveal">Qui rank, et pourquoi</h2>
+    <p class="lead reveal">Relevé Google France, langue française, le 26 août 2026. Cinq premiers organiques,
+    profondeur 20. Rien de mémoire.</p>
+
+    <div class="tblwrap reveal">
+      <table class="sheet">
+        <thead><tr>
+          <th>#</th><th>Domaine</th><th>Type</th><th class="n">Mots</th><th>Outil</th><th>Date visible</th><th>Ce qu'il fait</th>
+        </tr></thead>
+        <tbody>
+          <tr><td class="mono">1</td><td><b>finary.com</b></td><td>Outil + guide</td><td class="n">≈ 600</td>
+            <td><span class="pill ok">calculateur</span></td><td><span class="pill no">non</span></td>
+            <td>Courbe SVG 2 séries, infobulle au survol, état partageable par URL, sommaire ancré. <b>Aucun tableau.</b></td></tr>
+          <tr><td class="mono">2</td><td>gerezmieuxvotreargent.ca</td><td>Outil nu</td><td class="n">154</td>
+            <td><span class="pill ok">calculateur</span></td><td><span class="pill no">non</span></td>
+            <td>27 champs, autorité institutionnelle canadienne, <b>zéro rédactionnel</b>.</td></tr>
+          <tr><td class="mono">3</td><td>beauvoisine.fr</td><td>Outil + FAQ</td><td class="n">941</td>
+            <td><span class="pill ok">calculateur</span></td><td><span class="pill ok">06/08/2026</span></td>
+            <td>Graphe canvas, 1 tableau <b>figé</b> (100 €/mois), <span class="pill tl2">FAQPage</span> — seul du top 5.</td></tr>
+          <tr><td class="mono">4</td><td>home.saxo</td><td>Guide long</td><td class="n">3 463</td>
+            <td><span class="pill ok">calculateur</span></td><td><span class="pill no">non</span></td>
+            <td>8 H2 + 22 H3. <b>Meta description restée en anglais</b> — traduction non relue.</td></tr>
+          <tr><td class="mono">5</td><td>maif.fr</td><td>Guide</td><td class="n">1 821</td>
+            <td><span class="pill no">aucun</span></td><td><span class="pill ok">15/10/2025</span></td>
+            <td>H2 numérotés, 14 visuels, <b>aucun champ de saisie</b>. Rank sur l'autorité de marque.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="duo reveal">
+      <div class="card">
+        <h3 class="display">Blocs SERP</h3>
+        <p style="font-size:15px;margin-bottom:10px"><b>AI Overview : absent</b> sur la requête cible. La place se joue en organique pur.</p>
+        <p style="font-size:15px;margin-bottom:10px"><b>People Also Ask en <span class="mono">rank_absolute 3</span></b> — donc au-dessus de trois des cinq premiers résultats. Quatre questions racines :</p>
+        <ul class="clean" style="font-size:14.5px;margin-bottom:0">
+          <li>Quelle est la formule du rendement cumulé ?</li>
+          <li>Comment calcule-t-on le cumul ?</li>
+          <li>Comment calculer les intérêts cumulés ?</li>
+          <li>Qu'est-ce que la règle des 72 ?</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3 class="display">Le cluster, en volumes</h3>
+        <div class="tblwrap" style="margin:10px 0 0">
+          <table class="sheet" style="min-width:0">
+            <thead><tr><th>Requête</th><th class="n">Vol.</th><th class="n">KD</th></tr></thead>
+            <tbody>
+              <tr><td>intérêts composés</td><td class="n">5 400</td><td class="n">7</td></tr>
+              <tr><td><b>calcul intérêts composés</b></td><td class="n">3 600</td><td class="n">6</td></tr>
+              <tr><td>calculatrice intérêts composés</td><td class="n">2 900</td><td class="n">19</td></tr>
+              <tr><td>simulateur intérêts composés</td><td class="n">1 000</td><td class="n">19</td></tr>
+              <tr><td>tableau calcul intérêts composés</td><td class="n">320</td><td class="n">19</td></tr>
+              <tr><td>règle des 72</td><td class="n">170</td><td class="n">—</td></tr>
+              <tr><td>calcul intérêt composé mensuel</td><td class="n">140</td><td class="n">11</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p style="font-size:13.5px;color:var(--muted);margin:12px 0 0">
+          « calcul effet cumulé » — la formulation de départ — <b>ne remonte aucune donnée</b> en base
+          France/français. Le cluster réel se nomme <i>intérêts composés</i>. La requête cible est corrigée
+          en conséquence.
+        </p>
+      </div>
+    </div>
+
+    <div class="goal reveal">
+      <p class="kicker" style="margin-bottom:12px">Sortie obligatoire — les cinq lignes</p>
+      <p style="margin-bottom:11px"><b class="mono" style="color:var(--green)">CONSTAT 1</b> — 4 des 5 pages portent un calculateur, <b>aucune n'affiche le tableau année par année</b>.
+      Le n°1 trace une courbe et une infobulle ; le n°3 porte un tableau figé à 100 €/mois. La requête « tableau calcul intérêts composés » pèse 320 recherches/mois et n'a pas de réponse au-dessus du pli.</p>
+      <p style="margin-bottom:11px"><b class="mono" style="color:var(--green)">CONSTAT 2</b> — <b>aucune des 5 pages ne contient les chaînes « PFU », « flat tax », « prélèvement forfaitaire » ni « 17,2 »</b> (vérifié par grep sur le HTML des 4 pages accessibles + le source du n°1).
+      Le calcul est servi 100 % brut alors que le PFU est passé à <b>31,4 %</b> au 1<sup>er</sup> janvier 2026.</p>
+      <p style="margin-bottom:11px"><b class="mono" style="color:var(--green)">CONSTAT 3</b> — l'écart de longueur va de <b>154 mots</b> (n°2) à <b>3 463 mots</b> (n°4) pour le même top 5.
+      La longueur n'est pas le facteur de classement ici : <b>c'est l'outil</b>. Le n°5 n'en a aucun et tient sur l'autorité de marque seule.</p>
+      <p style="margin-bottom:11px"><b class="mono" style="color:var(--green)">ANGLE</b> — <b>plus démontré</b>. Même calcul que les cinq, mais mené jusqu'au montant réellement encaissé : impôt ligne par ligne, année par année, avec le taux officiel daté et sourcé.</p>
+      <p style="margin-bottom:0"><b class="mono" style="color:var(--green)">PROMESSE</b> — « Vous saurez combien il vous reste vraiment, pas combien la formule affiche. »</p>
+    </div>
+
+    <div class="metaphor reveal">
+      <b>La Clinique.</b> Le top 5 donne le résultat de l'analyse. Personne ne dit au patient ce que
+      le traitement va lui coûter. La page qu'on produit est la seule qui remet l'ordonnance <b>et</b> la facture.
+    </div>
+  </div>
+</section>
+
+<!-- ============ ÉTAPE 3 — GABARIT ============ -->
+<section class="stage">
+  <div class="wrap">
+    <div class="tl reveal"><span class="num">3</span><span class="lbl">Gabarit — dérivé de la SERP, faute de pages sœurs</span></div>
+    <h2 class="display reveal">L'ordre des modules</h2>
+    <p class="lead reveal">Sans sitemap client, aucune page sœur n'est relevable. Le gabarit se construit
+    depuis le relevé de l'étape 2 seul — et il devient la référence des pages outil suivantes.</p>
+
+    <div class="tblwrap reveal">
+      <table class="sheet">
+        <thead><tr><th class="n">#</th><th>Module</th><th>Rôle</th><th>Repris de</th></tr></thead>
+        <tbody>
+          <tr><td class="n mono">1</td><td>H1 + réponse encadrée</td><td>Répondre avant le premier scroll</td><td>n°1 et n°3</td></tr>
+          <tr><td class="n mono">2</td><td><b>Calculateur brut → impôt → net</b></td><td>Premier écran, c'est l'objet de la requête</td><td>n°1, n°2, n°3, n°4</td></tr>
+          <tr><td class="n mono">3</td><td><b>Tableau année par année</b></td><td>Point de retenue du 2<sup>e</sup> écran</td><td><span class="pill ok">divergence</span> — constat 1</td></tr>
+          <tr><td class="n mono">4</td><td>Graphe empilé versements / intérêts / impôt</td><td>Rendre l'écart visible d'un coup d'œil</td><td>n°1 et n°3</td></tr>
+          <tr><td class="n mono">5</td><td>La formule et ses variantes</td><td>Sous-intention servie par les 5</td><td>les 5 — c'est l'extrait mis en avant du n°1</td></tr>
+          <tr><td class="n mono">6</td><td>Tableau de référence 100 €/mois</td><td>Capte « tableau calcul intérêts composés »</td><td>n°3, mais <b>triable</b></td></tr>
+          <tr><td class="n mono">7</td><td>FAQ accordéon + JSON-LD</td><td>Capte le PAA en position 3</td><td>n°3 seul</td></tr>
+          <tr><td class="n mono">8</td><td>Avertissement + sources datées</td><td>Sujet financier — obligation d'honnêteté</td><td>n°1</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="reveal" style="color:var(--muted);font-size:14.5px">
+      <b>Divergences assumées :</b> le module 3 n'existe chez personne (constat 1) · le module 6 existe
+      figé chez le n°3, il devient triable · le calcul net n'existe nulle part (constat 2).
+      Aucune divergence n'est décorative, chacune pointe un constat daté.
+    </p>
+  </div>
+</section>
+
+<!-- ============ ÉTAPE 3 BIS — MODULES ============ -->
+<section class="stage">
+  <div class="wrap">
+    <div class="tl reveal"><span class="num star">★</span><span class="lbl">Modules d'attention — bloc 8 du brief</span></div>
+    <h2 class="display reveal">Deux leviers, pas trois</h2>
+    <p class="lead reveal">Gagner le clic dans la SERP, et terminer la session. Le reste n'est pas actionnable.
+    Le module se lit dans le relevé, il ne se devine pas.</p>
+
+    <div class="tblwrap reveal">
+      <table class="sheet">
+        <thead><tr><th>Ligne</th><th>Contenu</th></tr></thead>
+        <tbody>
+          <tr><td><b>Premier écran</b></td><td>H1, réponse encadrée en 2 lignes avec le chiffre net, puis les 5 champs du calculateur. Aucune introduction.</td></tr>
+          <tr><td><b>Module retenu</b></td><td><b>N°5 calculateur</b> — requête à variable, sans exception (durée, taux, montant).<br>
+            <b>N°4 tableau triable</b> — constat 1 : les 5 servent du figé ou rien.<br>
+            <b>N°8 FAQ accordéon</b> — constat 2 : PAA en <span class="mono">rank_absolute 3</span>, et un seul concurrent porte du <span class="mono">FAQPage</span>.</td></tr>
+          <tr><td><b>Emplacement</b></td><td>Calculateur <b>avant le premier scroll</b>. Tableau année par année immédiatement sous le calculateur, <b>au-dessus du 2<sup>e</sup> écran</b>. FAQ en fin de page.</td></tr>
+          <tr><td><b>Données du module</b></td><td>PFU <b>31,4 %</b> (12,8 % IR + 18,6 % PS) — <i>entreprendre.service-public.gouv.fr</i>, actualité A18796 du 10/02/2026.<br>
+            Livret A <b>1,7 %</b> — <i>service-public.fr</i> F2365, arrêté du 28/07/2026, période du 01/08/2026 au 31/01/2027.<br>
+            Aucune valeur d'exemple, aucun chiffre rond inventé.</td></tr>
+          <tr><td><b>Sans JavaScript</b></td><td>Le scénario par défaut (10 000 € · 100 €/mois · 20 ans · 5 %) est <b>écrit en dur dans le HTML</b> : résultats, graphe et 6 lignes de tableau. Le script remplace, il ne crée pas. La FAQ est servie ouverte.</td></tr>
+          <tr><td><b>Charge d'intégration</b></td><td>Un bloc HTML autonome. Zéro dépendance, zéro CDN, zéro librairie de graphes. À coller tel quel, à repasser aux variables CSS du client.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ÉTAPE 4 — LE BRIEF ============ -->
+<section class="stage">
+  <div class="wrap">
+    <div class="tl reveal"><span class="num">4</span><span class="lbl">Le brief — 8 blocs</span></div>
+    <h2 class="display reveal">Ce qui part en rédaction</h2>
+
+    <div class="card reveal">
+      <p class="kicker">Bloc 1 · Contexte</p>
+      <div class="tblwrap" style="margin-top:6px">
+        <table class="sheet"><tbody>
+          <tr><td style="width:34%"><b>Requête cible</b></td><td>calcul intérêts composés</td></tr>
+          <tr><td><b>Volume</b></td><td>3 600/mois — DataForSEO Labs, relevé du 26/08/2026 · KD 6 · intention informationnelle</td></tr>
+          <tr><td><b>Cannibalisation</b></td><td><span class="pill no">bloqué</span> — propriété GSC non fournie</td></tr>
+          <tr><td><b>Livrable</b></td><td>Création — sous réserve du verdict d'étape 1</td></tr>
+          <tr><td><b>URL cible</b></td><td><span class="mono">[LIEN À FOURNIR — page visée : outil / calcul-interets-composes]</span></td></tr>
+          <tr><td><b>Étage</b></td><td>Outils &gt; simulateurs &gt; épargne</td></tr>
+          <tr><td><b>Angle</b></td><td>Plus démontré — le net d'impôts, année par année</td></tr>
+          <tr><td><b>Promesse</b></td><td>Vous saurez combien il vous reste vraiment, pas combien la formule affiche.</td></tr>
+        </tbody></table>
+      </div>
+    </div>
+
+    <div class="card reveal">
+      <p class="kicker">Bloc 2 · Structure Hn — dérivée du relevé, pas d'un modèle</p>
+      <div class="tblwrap" style="margin-top:6px">
+        <table class="sheet">
+          <thead><tr><th>Hn</th><th>Intitulé</th><th>Sous-intention</th><th>Pourquoi il est là</th></tr></thead>
+          <tbody>
+            <tr><td class="mono">H1</td><td>Combien vos intérêts composés vous laissent vraiment, après impôts</td><td>La promesse</td><td>Longue traîne, différent du title</td></tr>
+            <tr><td class="mono">H2</td><td>Le simulateur : brut, impôt, net, année par année</td><td>calculatrice / simulateur (3 900/mois)</td><td>Constat 1 — l'outil est le facteur de classement</td></tr>
+            <tr><td class="mono">H2</td><td>Calcul intérêts composés : la formule et ses trois variantes</td><td>formule, mensuel, annuel</td><td>Extrait mis en avant du n°1 — attendu par la SERP</td></tr>
+            <tr><td class="mono">H2</td><td>Ce que le PFU 31,4 % retire à votre effet cumulé</td><td>net d'impôt</td><td>Constat 2 — trou du top 5, c'est l'angle</td></tr>
+            <tr><td class="mono">H2</td><td>Tableau : 100 € par mois selon la durée et le taux</td><td>tableau calcul intérêts composés (320/mois)</td><td>Constat 1 — figé chez le n°3, triable ici</td></tr>
+            <tr><td class="mono">H2</td><td>La règle des 72 ne marche plus au net</td><td>règle des 72 (170/mois)</td><td>4<sup>e</sup> question du PAA</td></tr>
+            <tr><td class="mono">H2</td><td>Où l'effet cumulé échappe à l'impôt</td><td>PEA, assurance vie, Livret A</td><td>Suite logique de l'angle — évite le retour SERP</td></tr>
+            <tr><td class="mono">H2</td><td>Questions fréquentes</td><td>PAA mot pour mot</td><td>Constat 2 — PAA en position absolue 3</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="duo reveal">
+      <div class="card">
+        <p class="kicker">Bloc 4 · Maillage sortant</p>
+        <p style="font-size:14.5px;color:var(--muted);margin-bottom:10px">Aucune URL devinée. En l'absence de <span class="mono">sources_url</span>, les six liens sortent en attente :</p>
+        <ul class="clean mono" style="font-size:13px">
+          <li>[LIEN À FOURNIR — PFU / fiscalité des placements]</li>
+          <li>[LIEN À FOURNIR — PEA]</li>
+          <li>[LIEN À FOURNIR — assurance vie]</li>
+          <li>[LIEN À FOURNIR — Livret A]</li>
+          <li>[LIEN À FOURNIR — page mère « outils »]</li>
+          <li>[LIEN À FOURNIR — simulateur de crédit]</li>
+        </ul>
+        <p style="font-size:14px;margin:0"><b>Externes autorisés et sourcés :</b> entreprendre.service-public.gouv.fr (A18796) et service-public.fr (F2365).</p>
+      </div>
+      <div class="card">
+        <p class="kicker">Bloc 5 · Maillage entrant <span style="color:var(--red)">— le bloc qu'on oublie</span></p>
+        <p style="font-size:14.5px;color:var(--muted);margin-bottom:10px">Minimum <b>deux liens depuis des pages déjà indexées</b>. Une page liée depuis un seul listing paginé n'a pas de maillage entrant.</p>
+        <ul class="clean" style="font-size:14.5px">
+          <li>Page mère « outils » → ancre <b>calcul intérêts composés</b>, dans le corps</li>
+          <li>Guide épargne → ancre <b>simulateur d'intérêts composés net</b>, dans le corps</li>
+          <li>Page PEA ou assurance vie → ancre <b>effet cumulé après impôts</b></li>
+        </ul>
+        <p style="font-size:14px;margin:0;color:var(--red)">Sans ces liens, la page n'est pas crawlée. C'est le contrôle J+21.</p>
+      </div>
+    </div>
+
+    <div class="duo reveal">
+      <div class="card">
+        <p class="kicker">Bloc 6 · Balisage</p>
+        <div class="tblwrap" style="margin-top:6px">
+          <table class="sheet" style="min-width:0"><tbody>
+            <tr><td style="width:30%"><b>Title</b></td><td>Calcul intérêts composés : simulateur net d'impôts <span class="pill">49 car.</span></td></tr>
+            <tr><td><b>Meta</b></td><td>Calculez vos intérêts composés année par année, brut et net du PFU 31,4 %. Capital, versements, durée : le tableau complet et ce qu'il vous reste. <span class="pill">148 car.</span></td></tr>
+            <tr><td><b>H1</b></td><td>Combien vos intérêts composés vous laissent vraiment, après impôts</td></tr>
+            <tr><td><b>JSON-LD</b></td><td><span class="mono">WebApplication</span> (repris du n°1) + <span class="mono">FAQPage</span> (repris du n°3) + <span class="mono">BreadcrumbList</span></td></tr>
+          </tbody></table>
+        </div>
+      </div>
+      <div class="card">
+        <p class="kicker">Bloc 7 · Objectifs — défauts du schéma, signalés</p>
+        <div class="tblwrap" style="margin-top:6px">
+          <table class="sheet" style="min-width:0"><tbody>
+            <tr><td><b>Mots</b></td><td>1 400 — médiane du top 5 hors n°2 (941 / 1 821 / 3 463)</td></tr>
+            <tr><td><b>Densité P1</b></td><td>requête exacte dans les 60 premiers mots</td></tr>
+            <tr><td><b>Liens sortants</b></td><td>≤ 8</td></tr>
+            <tr><td><b>FAQ</b></td><td>≥ 4 questions — les 4 du PAA</td></tr>
+            <tr><td><b>CTA</b></td><td>≥ 2</td></tr>
+            <tr><td><b>Paragraphes</b></td><td>≤ 4 lignes</td></tr>
+          </tbody></table>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ÉTAPE 5 — LA RÉDACTION + LES MODULES LIVE ============ -->
+<section class="stage">
+  <div class="wrap">
+    <div class="tl reveal"><span class="num">5</span><span class="lbl">Rédaction — la page, prête à intégrer</span></div>
+    <h2 class="display reveal">Combien vos intérêts composés vous laissent vraiment, après impôts</h2>
+    <p style="color:var(--muted);font-size:13.5px;margin-top:-2px" class="reveal">
+      ↑ H1 de la page · title distinct : <span class="mono">Calcul intérêts composés : simulateur net d'impôts</span>
+    </p>
+
+    <div class="goal reveal" style="margin-top:22px">
+      <p style="margin:0"><b>Calcul intérêts composés</b> : la formule donne le capital brut, jamais ce que vous encaissez.
+      Sur 10 000 € placés à 5 % avec 100 € de versement mensuel pendant 20 ans, elle affiche <b>67 113 €</b> —
+      après le prélèvement forfaitaire unique de <b>31,4 %</b> appliqué aux gains, il reste <b>56 716 €</b>,
+      soit <b style="color:var(--red)">10 398 € de moins</b>.</p>
+    </div>
+    <p class="reveal" style="font-size:13.5px;color:var(--muted)">
+      ↑ Réponse encadrée · requête exacte aux mots 1 à 4 · chiffre daté dans le premier tiers · zéro introduction.
+    </p>
+  </div>
+</section>
+
+<!-- ---------- MODULE 5 : LE CALCULATEUR ---------- -->
+<section class="stage" id="simu">
+  <div class="wrap">
+    <div class="tl reveal"><span class="num star">☑</span><span class="lbl">Module live · calculateur → tableau → graphe</span></div>
+    <h3 class="display reveal" style="font-size:23px">Le simulateur : brut, impôt, net, année par année</h3>
+
+    <div class="card reveal" style="margin-top:18px">
+      <form id="ci-form" onsubmit="return false" style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+        <div>
+          <label class="lbl" for="ci-cap">Capital initial (€)</label>
+          <input id="ci-cap" type="number" min="0" step="500" value="10000" inputmode="numeric">
+        </div>
+        <div>
+          <label class="lbl" for="ci-mois">Versement mensuel (€)</label>
+          <input id="ci-mois" type="number" min="0" step="25" value="100" inputmode="numeric">
+        </div>
+        <div>
+          <label class="lbl" for="ci-ans">Durée (années)</label>
+          <input id="ci-ans" type="number" min="1" max="50" step="1" value="20" inputmode="numeric">
+        </div>
+        <div>
+          <label class="lbl" for="ci-taux">Taux annuel (%)</label>
+          <input id="ci-taux" type="number" min="0" max="25" step="0.1" value="5" inputmode="decimal">
+        </div>
+        <div style="grid-column:1/-1">
+          <label class="lbl" for="ci-fisc">Fiscalité appliquée aux gains</label>
+          <select id="ci-fisc">
+            <option value="31.4" selected>Compte-titres, livret fiscalisé — PFU 31,4 %</option>
+            <option value="18.6">PEA après 5 ans, assurance vie après 8 ans — prélèvements sociaux 18,6 %</option>
+            <option value="0">Livret A, LDDS, LEP — exonérés, 0 %</option>
+            <option value="custom">Taux personnalisé…</option>
+          </select>
+        </div>
+        <div id="ci-custom-wrap" hidden style="grid-column:1/-1">
+          <label class="lbl" for="ci-custom">Taux d'imposition personnalisé (%)</label>
+          <input id="ci-custom" type="number" min="0" max="100" step="0.1" value="31.4" inputmode="decimal">
+        </div>
+      </form>
+
+      <div class="show3" style="margin-top:22px">
+        <div class="stat"><div class="v" id="r-brut">67 113 €</div><div class="k">Capital brut</div>
+          <div class="s">Ce qu'affichent les 5 premiers résultats</div></div>
+        <div class="stat"><div class="v neg" id="r-impot">10 398 €</div><div class="k">Impôt sur les gains</div>
+          <div class="s" id="r-impot-s">31,4 % de 33 113 € d'intérêts</div></div>
+        <div class="stat" style="border-color:rgba(155,214,74,.4)"><div class="v" id="r-net">56 716 €</div>
+          <div class="k">Capital net — ce qui vous reste</div>
+          <div class="s" id="r-net-s">dont 34 000 € de versements</div></div>
+      </div>
+
+      <svg id="ci-chart" viewBox="0 0 720 260" width="100%" height="260" role="img"
+           aria-label="Répartition du capital dans le temps entre versements, intérêts nets et impôt"
+           style="margin-top:20px;display:block;overflow:visible"></svg>
+      <div style="display:flex;gap:16px;flex-wrap:wrap;margin-top:10px;font-size:13px;color:var(--muted)">
+        <span><span style="display:inline-block;width:11px;height:11px;border-radius:3px;background:#2E8B7F;vertical-align:-1px"></span> Versements</span>
+        <span><span style="display:inline-block;width:11px;height:11px;border-radius:3px;background:#9BD64A;vertical-align:-1px"></span> Intérêts nets</span>
+        <span><span style="display:inline-block;width:11px;height:11px;border-radius:3px;background:#E55A5A;vertical-align:-1px"></span> Impôt</span>
+      </div>
+
+      <p class="kicker" style="margin:26px 0 8px">Le tableau que personne du top 5 n'affiche</p>
+      <div class="tblwrap" style="margin-top:0;max-height:330px;overflow-y:auto">
+        <table class="sheet" id="ci-table">
+          <thead><tr>
+            <th class="n">Année</th><th class="n">Versé cumulé</th><th class="n">Intérêts de l'année</th>
+            <th class="n">Capital brut</th><th class="n">Impôt latent</th><th class="n">Capital net</th>
+          </tr></thead>
+          <tbody id="ci-tbody">
+            <tr><td class="n mono">1</td><td class="n">11 200 €</td><td class="n">527 €</td><td class="n">11 727 €</td><td class="n">166 €</td><td class="n">11 562 €</td></tr>
+            <tr><td class="n mono">5</td><td class="n">16 000 €</td><td class="n">899 €</td><td class="n">19 544 €</td><td class="n">1 113 €</td><td class="n">18 431 €</td></tr>
+            <tr><td class="n mono">10</td><td class="n">22 000 €</td><td class="n">1 480 €</td><td class="n">31 725 €</td><td class="n">3 054 €</td><td class="n">28 672 €</td></tr>
+            <tr><td class="n mono">15</td><td class="n">28 000 €</td><td class="n">2 220 €</td><td class="n">47 272 €</td><td class="n">6 051 €</td><td class="n">41 220 €</td></tr>
+            <tr><td class="n mono">20</td><td class="n">34 000 €</td><td class="n">3 165 €</td><td class="n">67 113 €</td><td class="n">10 398 €</td><td class="n">56 716 €</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="font-size:13px;color:var(--muted);margin:12px 0 0">
+        Convention retenue, la même que le n°1 : le taux saisi est un <span class="def" tabindex="0"
+        data-def="Taux qui intègre déjà la capitalisation. 5 % effectif annuel = 5 % de plus au bout d'un an, quel que soit le rythme de versement.">taux annuel effectif</span>,
+        les versements sont investis en fin de mois au taux mensuel équivalent. C'est ce qui explique
+        les écarts entre calculateurs sur un même scénario.
+      </p>
+    </div>
+    <p class="reveal" style="font-size:13.5px;color:var(--muted)">
+      ↑ Sans JavaScript, le scénario par défaut reste affiché : résultats, 5 lignes de tableau et légende. Le script remplace, il ne crée pas.
+    </p>
+  </div>
+</section>
+
+<!-- ---------- SUITE RÉDACTION ---------- -->
+<section class="stage">
+  <div class="wrap">
+    <h3 class="display reveal" style="font-size:23px">Ce que le PFU 31,4 % retire à votre effet cumulé</h3>
+    <p class="reveal">Depuis le <b>1<sup>er</sup> janvier 2026</b>, le prélèvement forfaitaire unique est passé
+    de 30 % à <b>31,4 %</b> : 12,8 % d'impôt sur le revenu et 18,6 % de prélèvements sociaux
+    (<i>entreprendre.service-public.gouv.fr</i>, actualité A18796 du 10 février 2026).
+    Il frappe les <b>gains</b>, jamais le capital versé.</p>
+    <p class="reveal">La conséquence est contre-intuitive : plus l'effet cumulé est fort, plus la part imposée grossit.
+    Sur 20 ans à 5 %, les intérêts représentent 49 % du capital brut ; l'impôt prend 31,4 % de cette part,
+    soit <b>15 % du capital final</b>. Sur 40 ans, les intérêts pèsent 73 % du brut et l'impôt monte à
+    <b>23 % du capital final</b>.</p>
+
+    <h3 class="display reveal" style="font-size:23px;margin-top:34px">Tableau : 100 € par mois selon la durée et le taux</h3>
+    <p class="reveal" style="color:var(--muted);font-size:15px">Sans capital de départ. Brut, puis net après PFU 31,4 %.
+    Cliquez sur un en-tête pour trier.</p>
+    <div class="tblwrap reveal">
+      <table class="sheet" id="ref-table">
+        <thead><tr>
+          <th><button type="button" class="sortbtn" data-col="0" data-type="num">Taux ↕</button></th>
+          <th class="n"><button type="button" class="sortbtn" data-col="1" data-type="num">10 ans ↕</button></th>
+          <th class="n"><button type="button" class="sortbtn" data-col="2" data-type="num">20 ans ↕</button></th>
+          <th class="n"><button type="button" class="sortbtn" data-col="3" data-type="num">30 ans ↕</button></th>
+        </tr></thead>
+        <tbody>
+          <tr><td data-v="1.7"><b>1,7 %</b> <span class="pill">Livret A</span></td>
+            <td class="n" data-v="12728">13 062 € <span style="color:var(--muted)">→ 12 728 €</span></td>
+            <td class="n" data-v="27102">28 521 € <span style="color:var(--muted)">→ 27 102 €</span></td>
+            <td class="n" data-v="43422">46 820 € <span style="color:var(--muted)">→ 43 422 €</span></td></tr>
+          <tr><td data-v="3"><b>3 %</b></td>
+            <td class="n" data-v="13334">13 945 € <span style="color:var(--muted)">→ 13 334 €</span></td>
+            <td class="n" data-v="29958">32 685 € <span style="color:var(--muted)">→ 29 958 €</span></td>
+            <td class="n" data-v="51004">57 871 € <span style="color:var(--muted)">→ 51 004 €</span></td></tr>
+          <tr><td data-v="5"><b>5 %</b></td>
+            <td class="n" data-v="14357">15 436 € <span style="color:var(--muted)">→ 14 357 €</span></td>
+            <td class="n" data-v="35374">40 580 € <span style="color:var(--muted)">→ 35 374 €</span></td>
+            <td class="n" data-v="67239">81 538 € <span style="color:var(--muted)">→ 67 239 €</span></td></tr>
+          <tr><td data-v="7"><b>7 %</b></td>
+            <td class="n" data-v="15502">17 105 € <span style="color:var(--muted)">→ 15 502 €</span></td>
+            <td class="n" data-v="42353">50 754 € <span style="color:var(--muted)">→ 42 353 €</span></td>
+            <td class="n" data-v="91528">116 945 € <span style="color:var(--muted)">→ 91 528 €</span></td></tr>
+          <tr><td data-v="9"><b>9 %</b></td>
+            <td class="n" data-v="16783">18 972 € <span style="color:var(--muted)">→ 16 783 €</span></td>
+            <td class="n" data-v="51361">63 885 € <span style="color:var(--muted)">→ 51 361 €</span></td>
+            <td class="n" data-v="128069">170 211 € <span style="color:var(--muted)">→ 128 069 €</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 class="display reveal" style="font-size:23px;margin-top:34px">La règle des 72 ne marche plus au net</h3>
+    <p class="reveal">La <b>règle des 72</b> donne le nombre d'années pour doubler un capital : 72 divisé par le taux.
+    Elle est juste au brut — à 5 %, elle annonce 14,4 ans, le calcul exact donne 14,2 ans.
+    Elle devient fausse dès qu'on la passe au net : à 5 % brut, le rendement net après PFU tombe à
+    <b>3,43 %</b>, et le doublement passe à <b>20,6 ans</b>. Six ans d'écart sur la même hypothèse.</p>
+    <div class="tblwrap reveal">
+      <table class="sheet">
+        <thead><tr><th>Taux brut</th><th class="n">Règle des 72</th><th class="n">Exact brut</th><th class="n">Taux net PFU</th><th class="n">Exact net</th></tr></thead>
+        <tbody>
+          <tr><td>1,7 %</td><td class="n">42,4 ans</td><td class="n">41,1 ans</td><td class="n">1,17 %</td><td class="n"><b style="color:var(--red)">59,8 ans</b></td></tr>
+          <tr><td>3 %</td><td class="n">24,0 ans</td><td class="n">23,4 ans</td><td class="n">2,06 %</td><td class="n"><b style="color:var(--red)">34,0 ans</b></td></tr>
+          <tr><td>5 %</td><td class="n">14,4 ans</td><td class="n">14,2 ans</td><td class="n">3,43 %</td><td class="n"><b style="color:var(--red)">20,6 ans</b></td></tr>
+          <tr><td>7 %</td><td class="n">10,3 ans</td><td class="n">10,2 ans</td><td class="n">4,80 %</td><td class="n"><b style="color:var(--red)">14,8 ans</b></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 class="display reveal" style="font-size:23px;margin-top:34px">Où l'effet cumulé échappe à l'impôt</h3>
+    <p class="reveal">Trois enveloppes sortent le calcul du PFU, et c'est la seule variable que vous pilotez
+    vraiment — le taux de rendement, non.</p>
+    <ul class="clean reveal">
+      <li><b>Livret A, LDDS, LEP</b> — exonérés d'impôt et de prélèvements sociaux. Le taux du Livret A est de
+        <b>1,7 %</b> du 1<sup>er</sup> août 2026 au 31 janvier 2027 (arrêté du 28 juillet 2026, <i>service-public.fr</i> F2365).
+        Plafonnés, donc bornés.</li>
+      <li><b>PEA après 5 ans</b> — exonéré d'impôt sur le revenu, prélèvements sociaux dus : 18,6 % au lieu de 31,4 %.</li>
+      <li><b>Assurance vie après 8 ans</b> — abattement annuel de 4 600 € pour une personne seule, 9 200 € pour un couple,
+        puis 7,5 % + prélèvements sociaux. Le simulateur ci-dessus ne modélise pas l'abattement : il applique
+        les prélèvements sociaux seuls, ce qui est le cas le plus fréquent sur des retraits fractionnés.</li>
+    </ul>
+    <p class="reveal" style="background:rgba(155,214,74,.08);border-left:3px solid var(--green);padding:14px 18px;border-radius:0 12px 12px 0">
+      <b>Le chiffre qui décide.</b> 10 000 € + 100 €/mois pendant 20 ans : Livret A à 1,7 % exonéré donne
+      <b>42 531 €</b> ; un compte-titres à 5 % soumis au PFU donne <b>56 716 €</b> net.
+      L'enveloppe la moins taxée ne gagne pas automatiquement — <b>14 185 € d'écart</b> en faveur du compte-titres imposé.
+    </p>
+
+    <h3 class="display reveal" style="font-size:23px;margin-top:34px">Questions fréquentes</h3>
+    <p class="reveal" style="color:var(--muted);font-size:14.5px">Les quatre questions reprises mot pour mot du bloc
+    <i>Autres questions posées</i>, relevé en position absolue 3 le 26/08/2026. Servies ouvertes, donc indexables.</p>
+    <div class="faq reveal">
+      <details open><summary>Comment calculer les intérêts cumulés ?</summary>
+        <p>Capital final moins la somme des versements. Sur 10 000 € et 100 €/mois pendant 20 ans à 5 %,
+        le capital brut atteint 67 113 € pour 34 000 € versés : les intérêts cumulés sont de <b>33 113 €</b>,
+        dont 10 398 € partiront en impôt sous le régime du PFU.</p></details>
+      <details open><summary>Quelle est la formule du rendement cumulé ?</summary>
+        <p><span class="mono">Vf = Vi × (1 + t)^n</span> pour un capital seul. Avec des versements mensuels,
+        on ajoute <span class="mono">m × ((1 + t)^n − 1) ÷ i</span>, où <span class="mono">i = (1 + t)^(1/12) − 1</span>
+        est le taux mensuel équivalent. Le rendement cumulé sur la période vaut
+        <span class="mono">(Vf ÷ versements) − 1</span>.</p></details>
+      <details open><summary>Comment calcule-t-on le cumul ?</summary>
+        <p>Année après année : le capital de fin d'année devient le capital de début de l'année suivante,
+        et les intérêts produisent à leur tour des intérêts. C'est ce que montre la colonne
+        <i>intérêts de l'année</i> du tableau : 527 € la première année, 3 165 € la vingtième,
+        <b>six fois plus</b> pour un versement identique.</p></details>
+      <details open><summary>Qu'est-ce que la règle des 72 ?</summary>
+        <p>Un raccourci mental : 72 divisé par le taux annuel donne le nombre d'années pour doubler son capital.
+        Elle est fiable au brut entre 1 % et 10 %. Au net du PFU 31,4 %, elle sous-estime le délai de
+        <b>30 à 45 %</b> selon le taux — voir le tableau ci-dessus.</p></details>
+    </div>
+
+    <div class="metaphor reveal" style="margin-top:30px">
+      <b>Avertissement.</b> Cette simulation illustre le mécanisme des intérêts composés sur une durée donnée.
+      Elle ne constitue pas une prévision de performance ni un conseil en investissement. Le rendement réel
+      d'un placement varie, à la hausse comme à la baisse. Taux fiscaux relevés le 26 août 2026, sources citées.
+    </div>
+  </div>
+</section>
+
+<!-- ============ ÉTAPE 6 — CONTRÔLE ============ -->
+<section class="stage">
+  <div class="wrap">
+    <div class="tl reveal"><span class="num">6</span><span class="lbl">Contrôle — mesuré, pas déclaré</span></div>
+    <h2 class="display reveal">7 critères, valeurs réelles</h2>
+
+    <div class="tblwrap reveal">
+      <table class="sheet">
+        <thead><tr><th class="n">#</th><th>Critère</th><th>Mesure</th><th>Verdict</th></tr></thead>
+        <tbody>
+          <tr><td class="n mono">1</td><td>Exact match</td>
+            <td>« calcul intérêts composés » : début de title (car. 1-24) · mots 1-4 de la réponse encadrée · H2 n°2 du corps. <b>3 occurrences.</b></td>
+            <td><span class="pill ok">passé</span></td></tr>
+          <tr><td class="n mono">2</td><td>Liens</td>
+            <td>6 sortants internes en <span class="mono">[LIEN À FOURNIR]</span> · 2 externes sourcés · <b>3 entrants prévus</b>, aucun posé.</td>
+            <td><span class="pill no">bloqué</span></td></tr>
+          <tr><td class="n mono">3</td><td>Gabarit</td>
+            <td>Aucune page sœur relevable. Gabarit dérivé de la SERP, 3 divergences, chacune adossée à un constat daté.</td>
+            <td><span class="pill no">bloqué</span></td></tr>
+          <tr><td class="n mono">4</td><td>Seuils</td>
+            <td>Title 49/60 · meta 148/155 · 4 questions FAQ /4 · paragraphes ≤ 4 lignes · 8 liens max respecté.</td>
+            <td><span class="pill ok">passé</span></td></tr>
+          <tr><td class="n mono">5</td><td>Angle tenu</td>
+            <td>« net d'impôts » dans le title, dans la réponse encadrée, dans le calculateur, dans 4 des 7 H2.</td>
+            <td><span class="pill ok">passé</span></td></tr>
+          <tr><td class="n mono">6</td><td><b>Citabilité</b></td>
+            <td>Fait daté : PFU 31,4 % au 01/01/2026, source nommée, dans le premier tiers ✓ · Définition autonome en une phrase ✓ · Deux tableaux comparatifs lisibles hors prose ✓</td>
+            <td><span class="pill ok">CITABLE</span></td></tr>
+          <tr><td class="n mono">7</td><td><b>Signal</b></td>
+            <td>Title porte l'angle ✓ · P1 = la réponse, zéro intro ✓ · Module interactif au-dessus du 2<sup>e</sup> écran ✓ · Preuve datée dans le premier tiers ✓ · La suite est dans la page (PEA / assurance vie / Livret A) ✓</td>
+            <td><span class="pill ok">5/5</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="blocked reveal">
+      <p class="kicker tag" style="margin-bottom:8px">Deux critères bloqués — statut « livré », pas « intégré »</p>
+      <p style="margin:0">Les critères 2 et 3 ne se cochent pas par défaut. Ils se lèvent avec deux informations :
+      <b>la propriété Search Console</b> et <b>l'URL du sitemap</b>. Un faux positif au contrôle coûte plus cher
+      qu'un contrôle en attente.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ÉTAPES 7 & 8 ============ -->
+<section class="stage">
+  <div class="wrap">
+    <div class="tl reveal"><span class="num">7</span><span class="lbl">Livraison &amp; contrôle J+21</span></div>
+    <div class="duo reveal">
+      <div class="card">
+        <h3 class="display" style="font-size:19px">À la charge du client</h3>
+        <ul class="clean" style="font-size:15px;margin-bottom:0">
+          <li>Coller le bloc calculateur et repasser les variables CSS à la DA du site</li>
+          <li>Poser les <b>3 liens entrants</b> listés au bloc 5 — dans le corps, pas dans un listing</li>
+          <li>Déclarer le <span class="mono">FAQPage</span> et le <span class="mono">WebApplication</span></li>
+          <li>Fournir les 6 URL internes en attente</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3 class="display" style="font-size:19px">Ce qu'on mesure à J+21</h3>
+        <ul class="clean" style="font-size:15px;margin-bottom:0">
+          <li>En ligne à l'URL prévue, indexée</li>
+          <li><b>CTR vs courbe</b> à position égale — relever <span class="mono">rank_absolute</span>, pas seulement <span class="mono">rank_group</span> : le PAA occupe la position 3, une position 4 s'affiche 5<sup>e</sup></li>
+          <li>Temps d'engagement moyen, comparé aux pages sœurs</li>
+          <li><b>Le module est-il en ligne et fonctionnel ?</b> — c'est le manquement le plus fréquent</li>
+        </ul>
+      </div>
+    </div>
+    <p class="reveal" style="color:var(--muted);font-size:14.5px;margin-top:18px">
+      Un contenu ne passe « terminé » qu'après un verdict OK à J+21. D'ici là, le statut reste <b>livré</b>.
+      Deux mots différents pour deux réalités différentes.
+    </p>
+  </div>
+</section>
+
+<footer class="ft">
+  <div class="wrap">
+    <p style="margin-bottom:6px">Relevés du 26 août 2026 — SERP Google France, DataForSEO Labs, HTML des pages concurrentes,
+    service-public.fr et entreprendre.service-public.gouv.fr. Aucun chiffre de mémoire.</p>
+    <p class="mono" style="font-size:11.5px;letter-spacing:1.6px;text-transform:uppercase;color:var(--green);margin:0">
+      La SERP dicte la structure · le site dicte la forme · une page sans liens entrants n'existe pas
+    </p>
+  </div>
+</footer>
+
+<style>
+#ci-form label.lbl{display:block;margin-bottom:6px}
+#ci-form input,#ci-form select{width:100%;background:var(--navy-2);border:1px solid var(--line);
+  border-radius:11px;padding:11px 13px;color:var(--white);font-family:"JetBrains Mono",monospace;
+  font-size:15px;outline:none;min-height:44px}
+#ci-form input:focus,#ci-form select:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(155,214,74,.16)}
+#ci-form select{cursor:pointer}
+#ci-form select option{background:#02464A;color:#F4F8FB}
+.sortbtn{all:unset;cursor:pointer;font-family:"JetBrains Mono",monospace;font-size:10.5px;
+  letter-spacing:1.1px;text-transform:uppercase;font-weight:700;color:var(--white);min-height:26px}
+.sortbtn:hover{color:var(--green)}
+.sortbtn:focus-visible{outline:2px solid var(--green);outline-offset:3px}
+.faq details{background:var(--card);border:1px solid var(--line);border-radius:14px;
+  padding:14px 20px;margin-bottom:10px}
+.faq summary{cursor:pointer;font-weight:700;font-size:16.5px;list-style:none;min-height:26px}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::before{content:"+";color:var(--green);font-family:"JetBrains Mono",monospace;
+  margin-right:10px;font-weight:700}
+.faq details[open] summary::before{content:"−"}
+.faq details p{margin:12px 0 4px;color:var(--muted);font-size:15.5px}
+.faq details p b,.faq details p .mono{color:var(--white)}
+@media(max-width:620px){#ci-form{grid-template-columns:1fr !important}}
+</style>
+
+<script>
+(function(){
+  var nf = new Intl.NumberFormat(`fr-FR`, {maximumFractionDigits:0});
+  var eur = function(n){ return nf.format(Math.round(n)) + ` €`; };
+  var $ = function(id){ return document.getElementById(id); };
+
+  /* ---- barre de progression ---- */
+  window.addEventListener(`scroll`, function(){
+    var h = document.documentElement;
+    var p = h.scrollTop / Math.max(1, h.scrollHeight - h.clientHeight);
+    var b = $(`bar`); if (b) b.style.width = (p*100) + `%`;
+  }, {passive:true});
+
+  /* ---- reveal ---- */
+  if (`IntersectionObserver` in window){
+    var io = new IntersectionObserver(function(es){
+      es.forEach(function(e){ if (e.isIntersecting){ e.target.classList.add(`in`); io.unobserve(e.target); } });
+    }, {threshold:.12, rootMargin:`0px 0px -40px 0px`});
+    document.querySelectorAll(`.reveal`).forEach(function(el){ io.observe(el); });
+  } else {
+    document.querySelectorAll(`.reveal`).forEach(function(el){ el.classList.add(`in`); });
+  }
+
+  /* ---- calculateur ---- */
+  function capitalAt(Vi, m, r, t){
+    if (r <= 0) return Vi + m * 12 * t;
+    var f = Math.pow(1+r, t);
+    var ie = Math.pow(1+r, 1/12) - 1;
+    return Vi * f + m * (f - 1) / ie;
+  }
+
+  function readTaxRate(){
+    var sel = $(`ci-fisc`);
+    if (!sel) return 0.314;
+    if (sel.value === `custom`) return Math.max(0, Math.min(100, parseFloat($(`ci-custom`).value) || 0)) / 100;
+    return (parseFloat(sel.value) || 0) / 100;
+  }
+
+  function num(id, min, max, fb){
+    var v = parseFloat($(id).value);
+    if (isNaN(v)) v = fb;
+    return Math.max(min, Math.min(max, v));
+  }
+
+  function drawChart(rows, maxV){
+    var svg = $(`ci-chart`);
+    if (!svg) return;
+    var W = 720, H = 260, padL = 62, padR = 8, padT = 12, padB = 28;
+    var iw = W - padL - padR, ih = H - padT - padB;
+    var n = rows.length;
+    var x = function(i){ return padL + (n <= 1 ? 0 : (i/(n-1)) * iw); };
+    var y = function(v){ return padT + ih - (maxV <= 0 ? 0 : (v/maxV) * ih); };
+
+    function band(lowKey, highKey, fill){
+      var up = [], down = [];
+      for (var i=0;i<n;i++){ up.push(x(i).toFixed(1)+`,`+y(rows[i][highKey]).toFixed(1)); }
+      for (var j=n-1;j>=0;j--){ down.push(x(j).toFixed(1)+`,`+y(rows[j][lowKey]).toFixed(1)); }
+      return `<polygon points="`+up.concat(down).join(` `)+`" fill="`+fill+`" fill-opacity="0.82"/>`;
+    }
+
+    var grid = ``, ticks = 4;
+    for (var g=0; g<=ticks; g++){
+      var val = maxV * g / ticks, gy = y(val);
+      grid += `<line x1="`+padL+`" y1="`+gy.toFixed(1)+`" x2="`+(W-padR)+`" y2="`+gy.toFixed(1)+
+              `" stroke="rgba(255,255,255,.09)" stroke-width="1"/>`;
+      grid += `<text x="`+(padL-9)+`" y="`+(gy+4).toFixed(1)+`" fill="#9DB0C4" font-size="10.5" text-anchor="end" font-family="JetBrains Mono, monospace">`+
+              (val >= 1000 ? Math.round(val/1000)+` k` : Math.round(val))+`</text>`;
+    }
+    var lastY = rows[n-1].an;
+    var xax = `<text x="`+padL+`" y="`+(H-8)+`" fill="#9DB0C4" font-size="10.5" font-family="JetBrains Mono, monospace">an 0</text>`+
+              `<text x="`+(W-padR)+`" y="`+(H-8)+`" fill="#9DB0C4" font-size="10.5" text-anchor="end" font-family="JetBrains Mono, monospace">an `+lastY+`</text>`;
+
+    svg.innerHTML = grid +
+      band(`zero`, `verse`, `#2E8B7F`) +
+      band(`verse`, `net`,  `#9BD64A`) +
+      band(`net`,   `brut`, `#E55A5A`) + xax;
+  }
+
+  function compute(){
+    var Vi   = num(`ci-cap`, 0, 100000000, 10000);
+    var m    = num(`ci-mois`, 0, 1000000, 100);
+    var T    = Math.round(num(`ci-ans`, 1, 50, 20));
+    var r    = num(`ci-taux`, 0, 25, 5) / 100;
+    var tax  = readTaxRate();
+
+    var rows = [], prevBrut = Vi;
+    rows.push({an:0, verse:Vi, brut:Vi, net:Vi, zero:0, impot:0, gainAnnee:0});
+    for (var y=1; y<=T; y++){
+      var brut  = capitalAt(Vi, m, r, y);
+      var verse = Vi + m * 12 * y;
+      var ints  = brut - verse;
+      var impot = ints * tax;
+      rows.push({
+        an:y, verse:verse, brut:brut, net:brut - impot, zero:0, impot:impot,
+        gainAnnee: brut - prevBrut - m * 12
+      });
+      prevBrut = brut;
+    }
+
+    var last = rows[rows.length-1];
+    var interets = last.brut - last.verse;
+    $(`r-brut`).textContent  = eur(last.brut);
+    $(`r-impot`).textContent = eur(last.impot);
+    $(`r-net`).textContent   = eur(last.net);
+    $(`r-impot-s`).textContent = nf.format(Math.round(tax*1000)/10).replace(`.`,`,`) + ` % de ` + eur(interets) + ` d’intérêts`;
+    $(`r-net-s`).textContent   = `dont ` + eur(last.verse) + ` de versements`;
+
+    var html = ``;
+    for (var k=1;k<rows.length;k++){
+      var rw = rows[k];
+      html += `<tr><td class="n mono">`+rw.an+`</td><td class="n">`+eur(rw.verse)+`</td><td class="n">`+
+              eur(rw.gainAnnee)+`</td><td class="n">`+eur(rw.brut)+`</td><td class="n">`+
+              eur(rw.impot)+`</td><td class="n">`+eur(rw.net)+`</td></tr>`;
+    }
+    $(`ci-tbody`).innerHTML = html;
+
+    drawChart(rows, Math.max(1, last.brut));
+  }
+
+  var form = $(`ci-form`);
+  if (form){
+    form.addEventListener(`input`, function(e){
+      if (e.target && e.target.id === `ci-fisc`){
+        $(`ci-custom-wrap`).hidden = (e.target.value !== `custom`);
+      }
+      compute();
+    });
+    form.addEventListener(`change`, function(e){
+      if (e.target && e.target.id === `ci-fisc`){
+        $(`ci-custom-wrap`).hidden = (e.target.value !== `custom`);
+      }
+      compute();
+    });
+    compute();
+  }
+
+  /* ---- tableau de référence triable ---- */
+  var refT = document.getElementById(`ref-table`);
+  if (refT){
+    var dir = {};
+    refT.querySelectorAll(`.sortbtn`).forEach(function(btn){
+      btn.addEventListener(`click`, function(){
+        var col = parseInt(btn.dataset.col, 10);
+        dir[col] = dir[col] === `asc` ? `desc` : `asc`;
+        var tb = refT.querySelector(`tbody`);
+        var trs = Array.prototype.slice.call(tb.querySelectorAll(`tr`));
+        trs.sort(function(a,b){
+          var av = parseFloat(a.children[col].dataset.v) || 0;
+          var bv = parseFloat(b.children[col].dataset.v) || 0;
+          return dir[col] === `asc` ? av-bv : bv-av;
+        });
+        trs.forEach(function(tr){ tb.appendChild(tr); });
+      });
+    });
+  }
+})();
+</script>
