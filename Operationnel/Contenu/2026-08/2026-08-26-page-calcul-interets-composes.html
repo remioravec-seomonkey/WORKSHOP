@@ -1,0 +1,450 @@
+<title>Calculatrice intérêts composés net</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,800&family=Mulish:wght@400;500;700;900&family=JetBrains+Mono:wght@500;700&display=swap');
+:root{
+  --navy:#003032; --navy-2:#02464A; --navy-3:#04565A; --card:#013134; --line:#1A4548;
+  --green:#9BD64A; --green-soft:#B6E579; --teal:#2E8B7F; --teal-deep:#1B5E5A;
+  --white:#F4F8FB; --muted:#9DB0C4; --ink:#003032; --red:#E55A5A;
+  --shadow:0 24px 60px -20px rgba(0,0,0,.7); --r:20px;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--navy);color:var(--white);
+  font-family:Mulish,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-size:17px;line-height:1.72;-webkit-font-smoothing:antialiased;
+  background-image:
+    radial-gradient(1100px 620px at 12% -8%, rgba(46,139,127,.28), transparent 62%),
+    radial-gradient(900px 560px at 92% 2%, rgba(27,94,90,.32), transparent 60%);
+  background-attachment:fixed;}
+.wrap{max-width:880px;margin:0 auto;padding:0 26px}
+.display{font-family:Fraunces,Georgia,serif;font-weight:800;letter-spacing:-.5px;
+  line-height:1.14;margin:0;text-wrap:balance}
+h1.display{font-size:clamp(29px,4.6vw,44px);margin:0 0 20px}
+h2.display{font-size:clamp(22px,3.1vw,29px);margin:52px 0 14px}
+p{margin:0 0 16px;max-width:68ch}
+a{color:var(--green-soft);text-underline-offset:3px}
+.mono{font-family:"JetBrains Mono",ui-monospace,monospace}
+.kicker{font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:2px;
+  text-transform:uppercase;color:var(--green);margin:0 0 14px}
+.crumb{font-family:"JetBrains Mono",monospace;font-size:11.5px;letter-spacing:.8px;
+  color:var(--muted);padding:26px 0 20px;border-bottom:1px solid var(--line);margin-bottom:36px}
+.crumb a{color:var(--muted);text-decoration:none}
+.crumb a:hover{color:var(--green)}
+.answer{background:var(--card);border:1px solid var(--line);border-left:3px solid var(--green);
+  border-radius:0 var(--r) var(--r) 0;padding:22px 26px;margin:0 0 34px;box-shadow:var(--shadow)}
+.answer p{margin:0;font-size:18px;max-width:none}
+.answer b{color:var(--white)}
+.answer .down{color:var(--red)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);
+  padding:24px 26px;box-shadow:var(--shadow)}
+.show3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:22px 0 0}
+.stat{background:var(--navy-2);border:1px solid var(--line);border-radius:14px;padding:17px 19px}
+.stat .v{font-family:Fraunces,Georgia,serif;font-weight:800;font-size:29px;line-height:1;
+  color:var(--white);letter-spacing:-1px;font-variant-numeric:tabular-nums}
+.stat.gain{border-color:rgba(155,214,74,.42)}
+.stat.gain .v{color:var(--green)}
+.stat.loss .v{color:var(--red)}
+.stat .k{font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:1.4px;
+  text-transform:uppercase;color:var(--muted);margin-top:9px}
+.stat .s{font-size:13px;color:var(--muted);margin-top:6px;line-height:1.5}
+.tblwrap{overflow-x:auto;border:1px solid var(--line);border-radius:14px;margin:20px 0}
+table.t{width:100%;border-collapse:collapse;font-size:14.5px;min-width:600px}
+table.t th{background:var(--navy-3);text-align:left;padding:11px 14px;color:var(--white);
+  font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:1.1px;
+  text-transform:uppercase;font-weight:700;white-space:nowrap;border-bottom:1px solid var(--line)}
+table.t td{padding:10px 14px;border-bottom:1px solid var(--line)}
+table.t tr:last-child td{border-bottom:0}
+table.t tr:nth-child(even) td{background:rgba(255,255,255,.022)}
+table.t td.n,table.t th.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.pill{display:inline-block;font-family:"JetBrains Mono",monospace;font-size:9.5px;letter-spacing:1px;
+  text-transform:uppercase;padding:3px 8px;border-radius:999px;border:1px solid var(--line);
+  background:var(--navy-2);color:var(--muted)}
+.src{font-size:13.5px;color:var(--muted)}
+.src a{color:var(--muted)}
+ul.clean{margin:0 0 16px;padding-left:22px;max-width:68ch}
+ul.clean li{margin:0 0 10px}
+.keyfig{background:rgba(155,214,74,.08);border-left:3px solid var(--green);
+  border-radius:0 14px 14px 0;padding:16px 22px;margin:22px 0}
+.keyfig p{margin:0}
+.cta{display:inline-flex;align-items:center;gap:9px;background:var(--green);color:var(--ink);
+  text-decoration:none;font-weight:700;font-size:15px;padding:13px 22px;border-radius:13px;
+  transition:transform .18s cubic-bezier(.2,.7,.2,1),box-shadow .18s;min-height:46px}
+.cta:hover{transform:translateY(-2px);box-shadow:0 10px 26px -8px rgba(155,214,74,.5)}
+.cta.ghost{background:transparent;color:var(--green);border:1px solid rgba(155,214,74,.42)}
+.cta.ghost:hover{background:rgba(155,214,74,.09);box-shadow:none}
+.ctarow{display:flex;gap:12px;flex-wrap:wrap;margin:26px 0}
+.tolink{color:var(--green-soft);border-bottom:1px dashed rgba(155,214,74,.5);text-decoration:none}
+.tolink::after{content:" ↗";font-size:.8em;opacity:.6}
+.def{border-bottom:1px dashed var(--teal);cursor:help;position:relative}
+.def:hover::after,.def:focus-visible::after{content:attr(data-def);position:absolute;left:0;bottom:140%;
+  z-index:20;width:270px;background:var(--navy-3);border:1px solid var(--line);border-radius:12px;
+  padding:11px 13px;font-size:13px;line-height:1.55;color:var(--white);box-shadow:var(--shadow);
+  font-family:Mulish,sans-serif;font-weight:400}
+.faq details{background:var(--card);border:1px solid var(--line);border-radius:14px;
+  padding:15px 22px;margin-bottom:10px}
+.faq summary{cursor:pointer;font-weight:700;font-size:17px;list-style:none;min-height:26px}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::before{content:"+";color:var(--green);font-family:"JetBrains Mono",monospace;
+  margin-right:11px;font-weight:700}
+.faq details[open] summary::before{content:"−"}
+.faq details p{margin:13px 0 4px;color:var(--muted);font-size:16px}
+.faq details p b,.faq details p .mono{color:var(--white)}
+.legend{display:flex;gap:18px;flex-wrap:wrap;margin-top:11px;font-size:13px;color:var(--muted)}
+.legend i{display:inline-block;width:11px;height:11px;border-radius:3px;vertical-align:-1px;margin-right:5px}
+#ci-form{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+#ci-form label{display:block;margin-bottom:6px;font-family:"JetBrains Mono",monospace;
+  font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted)}
+#ci-form input,#ci-form select{width:100%;background:var(--navy-2);border:1px solid var(--line);
+  border-radius:11px;padding:12px 14px;color:var(--white);font-family:"JetBrains Mono",monospace;
+  font-size:16px;outline:none;min-height:46px}
+#ci-form input:focus,#ci-form select:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(155,214,74,.16)}
+#ci-form select option{background:#02464A;color:#F4F8FB}
+.sortbtn{all:unset;cursor:pointer;font-family:"JetBrains Mono",monospace;font-size:10.5px;
+  letter-spacing:1.1px;text-transform:uppercase;font-weight:700;color:var(--white);min-height:26px}
+.sortbtn:hover{color:var(--green)}
+a:focus-visible,summary:focus-visible,button:focus-visible,input:focus-visible,
+select:focus-visible,.def:focus-visible{outline:2px solid var(--green);outline-offset:3px;border-radius:6px}
+footer.ft{border-top:1px solid var(--line);margin-top:60px;padding:32px 0 60px;
+  color:var(--muted);font-size:13.5px}
+@media(max-width:620px){#ci-form{grid-template-columns:1fr}.show3{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){*{transition:none !important;animation:none !important}}
+</style>
+
+<div class="wrap">
+
+<nav class="crumb" aria-label="Fil d'Ariane">
+  <a href="#">Accueil</a> › <a href="#">Outils</a> › <a href="#">Simulateurs</a> › <span style="color:var(--green)">Calcul intérêts composés</span>
+</nav>
+
+<h1 class="display">Combien vos intérêts composés vous laissent vraiment, après impôts</h1>
+
+<div class="answer">
+  <p><b>Calcul intérêts composés</b> : la formule donne le capital brut, jamais ce que vous encaissez.
+  Sur 10 000 € placés à 5 % avec 100 € de versement mensuel pendant 20 ans, elle affiche <b>67 113 €</b> —
+  après le prélèvement forfaitaire unique de <b>31,4 %</b> appliqué aux gains, il reste <b>56 716 €</b>,
+  soit <b class="down">10 398 € de moins</b>.</p>
+</div>
+
+<h2 class="display" id="simulateur" style="margin-top:0">Le simulateur : brut, impôt, net, année par année</h2>
+<p>Modifiez les quatre paramètres et l'enveloppe fiscale. Le tableau se recalcule ligne par ligne :
+c'est la seule façon de voir à quel moment les intérêts dépassent vos versements.</p>
+
+<div class="card">
+  <form id="ci-form" onsubmit="return false">
+    <div><label for="ci-cap">Capital initial (€)</label>
+      <input id="ci-cap" type="number" min="0" step="500" value="10000" inputmode="numeric"></div>
+    <div><label for="ci-mois">Versement mensuel (€)</label>
+      <input id="ci-mois" type="number" min="0" step="25" value="100" inputmode="numeric"></div>
+    <div><label for="ci-ans">Durée (années)</label>
+      <input id="ci-ans" type="number" min="1" max="50" step="1" value="20" inputmode="numeric"></div>
+    <div><label for="ci-taux">Taux annuel (%)</label>
+      <input id="ci-taux" type="number" min="0" max="25" step="0.1" value="5" inputmode="decimal"></div>
+    <div style="grid-column:1/-1"><label for="ci-fisc">Enveloppe et fiscalité des gains</label>
+      <select id="ci-fisc">
+        <option value="31.4" selected>Compte-titres, livret fiscalisé — PFU 31,4 %</option>
+        <option value="18.6">PEA après 5 ans, assurance vie après 8 ans — prélèvements sociaux 18,6 %</option>
+        <option value="0">Livret A, LDDS, LEP — exonérés, 0 %</option>
+        <option value="custom">Taux personnalisé…</option>
+      </select></div>
+    <div id="ci-custom-wrap" hidden style="grid-column:1/-1">
+      <label for="ci-custom">Taux d'imposition personnalisé (%)</label>
+      <input id="ci-custom" type="number" min="0" max="100" step="0.1" value="31.4" inputmode="decimal"></div>
+  </form>
+
+  <div class="show3">
+    <div class="stat"><div class="v" id="r-brut">67 113 €</div><div class="k">Capital brut</div>
+      <div class="s">Avant impôt</div></div>
+    <div class="stat loss"><div class="v" id="r-impot">10 398 €</div><div class="k">Impôt sur les gains</div>
+      <div class="s" id="r-impot-s">31,4 % de 33 113 € d'intérêts</div></div>
+    <div class="stat gain"><div class="v" id="r-net">56 716 €</div><div class="k">Capital net — ce qui vous reste</div>
+      <div class="s" id="r-net-s">dont 34 000 € de versements</div></div>
+  </div>
+
+  <svg id="ci-chart" viewBox="0 0 720 250" width="100%" height="250" role="img"
+       aria-label="Répartition du capital dans le temps entre versements, intérêts nets et impôt"
+       style="margin-top:22px;display:block"></svg>
+  <div class="legend">
+    <span><i style="background:#2E8B7F"></i>Versements</span>
+    <span><i style="background:#9BD64A"></i>Intérêts nets</span>
+    <span><i style="background:#E55A5A"></i>Impôt</span>
+  </div>
+
+  <div class="tblwrap" style="max-height:340px;overflow-y:auto">
+    <table class="t" id="ci-table">
+      <thead><tr><th class="n">Année</th><th class="n">Versé cumulé</th><th class="n">Intérêts de l'année</th>
+        <th class="n">Capital brut</th><th class="n">Impôt latent</th><th class="n">Capital net</th></tr></thead>
+      <tbody id="ci-tbody">
+        <tr><td class="n mono">1</td><td class="n">11 200 €</td><td class="n">527 €</td><td class="n">11 727 €</td><td class="n">166 €</td><td class="n">11 562 €</td></tr>
+        <tr><td class="n mono">5</td><td class="n">16 000 €</td><td class="n">899 €</td><td class="n">19 544 €</td><td class="n">1 113 €</td><td class="n">18 431 €</td></tr>
+        <tr><td class="n mono">10</td><td class="n">22 000 €</td><td class="n">1 480 €</td><td class="n">31 725 €</td><td class="n">3 054 €</td><td class="n">28 672 €</td></tr>
+        <tr><td class="n mono">15</td><td class="n">28 000 €</td><td class="n">2 220 €</td><td class="n">47 272 €</td><td class="n">6 051 €</td><td class="n">41 220 €</td></tr>
+        <tr><td class="n mono">20</td><td class="n">34 000 €</td><td class="n">3 165 €</td><td class="n">67 113 €</td><td class="n">10 398 €</td><td class="n">56 716 €</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="src" style="margin:6px 0 0">Convention : le taux saisi est un <span class="def" tabindex="0"
+    data-def="Taux qui intègre déjà la capitalisation. 5 % effectif annuel = 5 % de plus au bout d'un an, quel que soit le rythme de versement.">taux annuel effectif</span> ;
+    les versements sont investis en fin de mois au taux mensuel équivalent. C'est ce qui explique les écarts entre calculateurs sur un même scénario.</p>
+</div>
+
+<div class="ctarow">
+  <a class="cta" href="#enveloppes">Voir quelle enveloppe garde le plus</a>
+  <a class="cta ghost" href="#">Comparer les placements disponibles</a>
+</div>
+
+<h2 class="display">Calcul intérêts composés : la formule et ses trois variantes</h2>
+<p>Pour un capital seul, la valeur future s'écrit <span class="mono">Vf = Vi × (1 + t)<sup>n</sup></span> —
+où <span class="mono">Vi</span> est le capital de départ, <span class="mono">t</span> le taux annuel
+et <span class="mono">n</span> le nombre d'années.</p>
+<ul class="clean">
+  <li><b>Capitalisation annuelle</b> — les intérêts s'ajoutent une fois par an. C'est la formule ci-dessus.</li>
+  <li><b>Capitalisation infra-annuelle</b> — <span class="mono">Vf = Vi × (1 + t/p)<sup>n×p</sup></span>,
+    où <span class="mono">p</span> est le nombre de périodes par an. À 5 % sur 20 ans, la capitalisation
+    mensuelle donne 27 126 € contre 26 533 € en annuel sur 10 000 € : <b>593 € d'écart</b>, uniquement dû au rythme.</li>
+  <li><b>Avec versements réguliers</b> — on ajoute
+    <span class="mono">m × ((1 + t)<sup>n</sup> − 1) ÷ i</span>, où
+    <span class="mono">i = (1 + t)<sup>1/12</sup> − 1</span> est le taux mensuel équivalent.
+    C'est la variante que retient le simulateur.</li>
+</ul>
+
+<h2 class="display">Ce que le PFU 31,4 % retire à votre effet cumulé</h2>
+<p>Depuis le <b>1<sup>er</sup> janvier 2026</b>, le prélèvement forfaitaire unique est passé de 30 % à
+<b>31,4 %</b> : 12,8 % d'impôt sur le revenu et 18,6 % de prélèvements sociaux. Il frappe les
+<b>gains</b>, jamais le capital versé.</p>
+<p>La conséquence est contre-intuitive : plus l'effet cumulé est fort, plus la part imposée grossit.
+Sur 20 ans à 5 %, les intérêts représentent 49 % du capital brut, et l'impôt prend <b>15 % du capital
+final</b>. Sur 40 ans, les intérêts pèsent 73 % du brut et l'impôt monte à <b>23 % du capital final</b>.</p>
+<p class="src">Source : <a href="https://entreprendre.service-public.gouv.fr/actualites/A18796" rel="nofollow">
+entreprendre.service-public.gouv.fr</a>, actualité A18796 du 10 février 2026.</p>
+
+<h2 class="display">Tableau : 100 € par mois selon la durée et le taux</h2>
+<p>Sans capital de départ. Chaque case donne le brut, puis le net après PFU 31,4 %.
+Cliquez sur un en-tête pour trier.</p>
+<div class="tblwrap">
+  <table class="t" id="ref-table">
+    <thead><tr>
+      <th><button type="button" class="sortbtn" data-col="0">Taux ↕</button></th>
+      <th class="n"><button type="button" class="sortbtn" data-col="1">10 ans ↕</button></th>
+      <th class="n"><button type="button" class="sortbtn" data-col="2">20 ans ↕</button></th>
+      <th class="n"><button type="button" class="sortbtn" data-col="3">30 ans ↕</button></th>
+    </tr></thead>
+    <tbody>
+      <tr><td data-v="1.7"><b>1,7 %</b> <span class="pill">Livret A</span></td>
+        <td class="n" data-v="12728">13 062 € <span style="color:var(--muted)">→ 12 728 €</span></td>
+        <td class="n" data-v="27102">28 521 € <span style="color:var(--muted)">→ 27 102 €</span></td>
+        <td class="n" data-v="43422">46 820 € <span style="color:var(--muted)">→ 43 422 €</span></td></tr>
+      <tr><td data-v="3"><b>3 %</b> <span class="pill">Fonds euros</span></td>
+        <td class="n" data-v="13334">13 945 € <span style="color:var(--muted)">→ 13 334 €</span></td>
+        <td class="n" data-v="29958">32 685 € <span style="color:var(--muted)">→ 29 958 €</span></td>
+        <td class="n" data-v="51004">57 871 € <span style="color:var(--muted)">→ 51 004 €</span></td></tr>
+      <tr><td data-v="5"><b>5 %</b></td>
+        <td class="n" data-v="14357">15 436 € <span style="color:var(--muted)">→ 14 357 €</span></td>
+        <td class="n" data-v="35374">40 580 € <span style="color:var(--muted)">→ 35 374 €</span></td>
+        <td class="n" data-v="67239">81 538 € <span style="color:var(--muted)">→ 67 239 €</span></td></tr>
+      <tr><td data-v="7"><b>7 %</b> <span class="pill">ETF actions</span></td>
+        <td class="n" data-v="15502">17 105 € <span style="color:var(--muted)">→ 15 502 €</span></td>
+        <td class="n" data-v="42353">50 754 € <span style="color:var(--muted)">→ 42 353 €</span></td>
+        <td class="n" data-v="91528">116 945 € <span style="color:var(--muted)">→ 91 528 €</span></td></tr>
+      <tr><td data-v="9"><b>9 %</b></td>
+        <td class="n" data-v="16783">18 972 € <span style="color:var(--muted)">→ 16 783 €</span></td>
+        <td class="n" data-v="51361">63 885 € <span style="color:var(--muted)">→ 51 361 €</span></td>
+        <td class="n" data-v="128069">170 211 € <span style="color:var(--muted)">→ 128 069 €</span></td></tr>
+    </tbody>
+  </table>
+</div>
+
+<h2 class="display">La règle des 72 ne marche plus au net</h2>
+<p>La <b>règle des 72</b> donne le nombre d'années pour doubler un capital : 72 divisé par le taux.
+Elle est juste au brut — à 5 %, elle annonce 14,4 ans, le calcul exact donne 14,2 ans.
+Elle devient fausse dès qu'on la passe au net : à 5 % brut, le rendement net après PFU tombe à
+<b>3,43 %</b>, et le doublement passe à <b>20,6 ans</b>. Six ans d'écart sur la même hypothèse.</p>
+<div class="tblwrap">
+  <table class="t">
+    <thead><tr><th>Taux brut</th><th class="n">Règle des 72</th><th class="n">Exact brut</th>
+      <th class="n">Taux net PFU</th><th class="n">Exact net</th></tr></thead>
+    <tbody>
+      <tr><td>1,7 %</td><td class="n">42,4 ans</td><td class="n">41,1 ans</td><td class="n">1,17 %</td><td class="n"><b style="color:var(--red)">59,8 ans</b></td></tr>
+      <tr><td>3 %</td><td class="n">24,0 ans</td><td class="n">23,4 ans</td><td class="n">2,06 %</td><td class="n"><b style="color:var(--red)">34,0 ans</b></td></tr>
+      <tr><td>5 %</td><td class="n">14,4 ans</td><td class="n">14,2 ans</td><td class="n">3,43 %</td><td class="n"><b style="color:var(--red)">20,6 ans</b></td></tr>
+      <tr><td>7 %</td><td class="n">10,3 ans</td><td class="n">10,2 ans</td><td class="n">4,80 %</td><td class="n"><b style="color:var(--red)">14,8 ans</b></td></tr>
+    </tbody>
+  </table>
+</div>
+
+<h2 class="display" id="enveloppes">Où l'effet cumulé échappe à l'impôt</h2>
+<p>Trois enveloppes sortent le calcul du PFU. C'est la seule variable que vous pilotez vraiment —
+le taux de rendement, non.</p>
+<ul class="clean">
+  <li><b>Livret A, LDDS, LEP</b> — exonérés d'impôt et de prélèvements sociaux. Le taux du
+    <a class="tolink" href="#">Livret A</a> est de <b>1,7 %</b> du 1<sup>er</sup> août 2026 au
+    31 janvier 2027. Plafonnés, donc bornés.</li>
+  <li><b><a class="tolink" href="#">PEA</a> après 5 ans</b> — exonéré d'impôt sur le revenu,
+    prélèvements sociaux dus : 18,6 % au lieu de 31,4 %.</li>
+  <li><b><a class="tolink" href="#">Assurance vie</a> après 8 ans</b> — abattement annuel de 4 600 €
+    pour une personne seule, 9 200 € pour un couple, puis 7,5 % + prélèvements sociaux. Le simulateur
+    ne modélise pas l'abattement : il applique les prélèvements sociaux seuls, le cas le plus fréquent
+    sur des retraits fractionnés.</li>
+</ul>
+<div class="keyfig">
+  <p><b>Le chiffre qui décide.</b> 10 000 € + 100 €/mois pendant 20 ans : un Livret A à 1,7 % exonéré
+  donne <b>42 531 €</b>, un compte-titres à 5 % soumis au PFU donne <b>56 716 €</b> net.
+  L'enveloppe la moins taxée ne gagne pas automatiquement — <b>14 185 € d'écart</b> en faveur du
+  placement imposé.</p>
+</div>
+<p class="src">Taux du Livret A : arrêté du 28 juillet 2026, <a href="https://www.service-public.fr/particuliers/vosdroits/F2365" rel="nofollow">service-public.fr</a>, fiche F2365.</p>
+
+<h2 class="display">Questions fréquentes</h2>
+<div class="faq">
+  <details open><summary>Comment calculer les intérêts cumulés ?</summary>
+    <p>Capital final moins la somme des versements. Sur 10 000 € et 100 €/mois pendant 20 ans à 5 %,
+    le capital brut atteint 67 113 € pour 34 000 € versés : les intérêts cumulés sont de <b>33 113 €</b>,
+    dont 10 398 € partiront en impôt sous le régime du PFU.</p></details>
+  <details open><summary>Quelle est la formule du rendement cumulé ?</summary>
+    <p><span class="mono">Vf = Vi × (1 + t)^n</span> pour un capital seul. Avec des versements mensuels,
+    on ajoute <span class="mono">m × ((1 + t)^n − 1) ÷ i</span>, où
+    <span class="mono">i = (1 + t)^(1/12) − 1</span> est le taux mensuel équivalent. Le rendement cumulé
+    sur la période vaut <span class="mono">(Vf ÷ versements) − 1</span>.</p></details>
+  <details open><summary>Comment calcule-t-on le cumul ?</summary>
+    <p>Année après année : le capital de fin d'année devient le capital de début de l'année suivante,
+    et les intérêts produisent à leur tour des intérêts. C'est ce que montre la colonne
+    <i>intérêts de l'année</i> du tableau : 527 € la première année, 3 165 € la vingtième,
+    <b>six fois plus</b> pour un versement identique.</p></details>
+  <details open><summary>Qu'est-ce que la règle des 72 ?</summary>
+    <p>Un raccourci mental : 72 divisé par le taux annuel donne le nombre d'années pour doubler son
+    capital. Elle est fiable au brut entre 1 % et 10 %. Au net du PFU 31,4 %, elle sous-estime le délai
+    de <b>30 à 45 %</b> selon le taux.</p></details>
+</div>
+
+<div class="ctarow">
+  <a class="cta" href="#simulateur">Relancer une simulation</a>
+  <a class="cta ghost" href="#">Calculer mes mensualités de crédit</a>
+</div>
+
+</div>
+
+<footer class="ft"><div class="wrap">
+  <p style="max-width:70ch">Cette simulation illustre le mécanisme des intérêts composés sur une durée
+  donnée. Elle ne constitue pas une prévision de performance ni un conseil en investissement.
+  Le rendement réel d'un placement varie, à la hausse comme à la baisse, et le capital investi
+  n'est pas garanti.</p>
+  <p class="mono" style="font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--green);margin:0">
+    Taux fiscaux relevés le 26 août 2026 · sources citées en page</p>
+</div></footer>
+
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication",
+"name":"Calculatrice d'intérêts composés net d'impôts",
+"applicationCategory":"FinanceApplication","operatingSystem":"Web",
+"offers":{"@type":"Offer","price":"0","priceCurrency":"EUR"}}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"Comment calculer les intérêts cumulés ?","acceptedAnswer":{"@type":"Answer","text":"Capital final moins la somme des versements. Sur 10 000 € et 100 €/mois pendant 20 ans à 5 %, le capital brut atteint 67 113 € pour 34 000 € versés : les intérêts cumulés sont de 33 113 €, dont 10 398 € partiront en impôt sous le régime du PFU."}},
+{"@type":"Question","name":"Quelle est la formule du rendement cumulé ?","acceptedAnswer":{"@type":"Answer","text":"Vf = Vi × (1 + t)^n pour un capital seul. Avec des versements mensuels, on ajoute m × ((1 + t)^n − 1) ÷ i, où i = (1 + t)^(1/12) − 1 est le taux mensuel équivalent."}},
+{"@type":"Question","name":"Comment calcule-t-on le cumul ?","acceptedAnswer":{"@type":"Answer","text":"Année après année : le capital de fin d'année devient le capital de début de l'année suivante, et les intérêts produisent à leur tour des intérêts. 527 € la première année, 3 165 € la vingtième pour un versement identique."}},
+{"@type":"Question","name":"Qu'est-ce que la règle des 72 ?","acceptedAnswer":{"@type":"Answer","text":"72 divisé par le taux annuel donne le nombre d'années pour doubler son capital. Fiable au brut entre 1 % et 10 %, elle sous-estime le délai de 30 à 45 % une fois le PFU de 31,4 % appliqué."}}]}
+</script>
+
+<script>
+(function(){
+  var nf = new Intl.NumberFormat(`fr-FR`, {maximumFractionDigits:0});
+  var eur = function(n){ return nf.format(Math.round(n)) + ` €`; };
+  var $ = function(id){ return document.getElementById(id); };
+
+  function capitalAt(Vi, m, r, t){
+    if (r <= 0) return Vi + m * 12 * t;
+    var f = Math.pow(1+r, t), ie = Math.pow(1+r, 1/12) - 1;
+    return Vi * f + m * (f - 1) / ie;
+  }
+  function readTaxRate(){
+    var sel = $(`ci-fisc`);
+    if (!sel) return 0.314;
+    if (sel.value === `custom`) return Math.max(0, Math.min(100, parseFloat($(`ci-custom`).value) || 0)) / 100;
+    return (parseFloat(sel.value) || 0) / 100;
+  }
+  function num(id, min, max, fb){
+    var v = parseFloat($(id).value);
+    if (isNaN(v)) v = fb;
+    return Math.max(min, Math.min(max, v));
+  }
+  function drawChart(rows, maxV){
+    var svg = $(`ci-chart`); if (!svg) return;
+    var W = 720, H = 250, padL = 62, padR = 8, padT = 12, padB = 26;
+    var iw = W - padL - padR, ih = H - padT - padB, n = rows.length;
+    var x = function(i){ return padL + (n <= 1 ? 0 : (i/(n-1)) * iw); };
+    var y = function(v){ return padT + ih - (maxV <= 0 ? 0 : (v/maxV) * ih); };
+    function band(lo, hi, fill){
+      var up = [], dn = [];
+      for (var i=0;i<n;i++){ up.push(x(i).toFixed(1)+`,`+y(rows[i][hi]).toFixed(1)); }
+      for (var j=n-1;j>=0;j--){ dn.push(x(j).toFixed(1)+`,`+y(rows[j][lo]).toFixed(1)); }
+      return `<polygon points="`+up.concat(dn).join(` `)+`" fill="`+fill+`" fill-opacity="0.85"/>`;
+    }
+    var grid = ``, ticks = 4;
+    for (var g=0; g<=ticks; g++){
+      var val = maxV * g / ticks, gy = y(val);
+      grid += `<line x1="`+padL+`" y1="`+gy.toFixed(1)+`" x2="`+(W-padR)+`" y2="`+gy.toFixed(1)+
+              `" stroke="rgba(255,255,255,.09)" stroke-width="1"/>`;
+      grid += `<text x="`+(padL-9)+`" y="`+(gy+4).toFixed(1)+
+              `" fill="#9DB0C4" font-size="10.5" text-anchor="end" font-family="JetBrains Mono, monospace">`+
+              (val >= 1000 ? Math.round(val/1000)+` k` : Math.round(val))+`</text>`;
+    }
+    var xax = `<text x="`+padL+`" y="`+(H-6)+`" fill="#9DB0C4" font-size="10.5" font-family="JetBrains Mono, monospace">an 0</text>`+
+              `<text x="`+(W-padR)+`" y="`+(H-6)+`" fill="#9DB0C4" font-size="10.5" text-anchor="end" font-family="JetBrains Mono, monospace">an `+rows[n-1].an+`</text>`;
+    svg.innerHTML = grid + band(`zero`,`verse`,`#2E8B7F`) + band(`verse`,`net`,`#9BD64A`) + band(`net`,`brut`,`#E55A5A`) + xax;
+  }
+  function compute(){
+    var Vi = num(`ci-cap`,0,100000000,10000), m = num(`ci-mois`,0,1000000,100);
+    var T = Math.round(num(`ci-ans`,1,50,20)), r = num(`ci-taux`,0,25,5)/100, tax = readTaxRate();
+    var rows = [{an:0, verse:Vi, brut:Vi, net:Vi, zero:0, impot:0, gainAnnee:0}], prevBrut = Vi;
+    for (var y=1; y<=T; y++){
+      var brut = capitalAt(Vi,m,r,y), verse = Vi + m*12*y, ints = brut - verse, impot = ints * tax;
+      rows.push({an:y, verse:verse, brut:brut, net:brut-impot, zero:0, impot:impot,
+                 gainAnnee: brut - prevBrut - m*12});
+      prevBrut = brut;
+    }
+    var last = rows[rows.length-1], interets = last.brut - last.verse;
+    $(`r-brut`).textContent = eur(last.brut);
+    $(`r-impot`).textContent = eur(last.impot);
+    $(`r-net`).textContent = eur(last.net);
+    $(`r-impot-s`).textContent = nf.format(Math.round(tax*1000)/10).replace(`.`,`,`) + ` % de ` + eur(interets) + ` d\u2019int\u00e9r\u00eats`;
+    $(`r-net-s`).textContent = `dont ` + eur(last.verse) + ` de versements`;
+    var html = ``;
+    for (var k=1;k<rows.length;k++){
+      var rw = rows[k];
+      html += `<tr><td class="n mono">`+rw.an+`</td><td class="n">`+eur(rw.verse)+`</td><td class="n">`+
+              eur(rw.gainAnnee)+`</td><td class="n">`+eur(rw.brut)+`</td><td class="n">`+
+              eur(rw.impot)+`</td><td class="n">`+eur(rw.net)+`</td></tr>`;
+    }
+    $(`ci-tbody`).innerHTML = html;
+    drawChart(rows, Math.max(1, last.brut));
+  }
+  var form = $(`ci-form`);
+  if (form){
+    function onch(e){
+      if (e.target && e.target.id === `ci-fisc`){ $(`ci-custom-wrap`).hidden = (e.target.value !== `custom`); }
+      compute();
+    }
+    form.addEventListener(`input`, onch);
+    form.addEventListener(`change`, onch);
+    compute();
+  }
+
+  var refT = $(`ref-table`);
+  if (refT){
+    var dir = {};
+    refT.querySelectorAll(`.sortbtn`).forEach(function(btn){
+      btn.addEventListener(`click`, function(){
+        var col = parseInt(btn.dataset.col, 10);
+        dir[col] = dir[col] === `asc` ? `desc` : `asc`;
+        var tb = refT.querySelector(`tbody`);
+        var trs = Array.prototype.slice.call(tb.querySelectorAll(`tr`));
+        trs.sort(function(a,b){
+          var av = parseFloat(a.children[col].dataset.v) || 0;
+          var bv = parseFloat(b.children[col].dataset.v) || 0;
+          return dir[col] === `asc` ? av-bv : bv-av;
+        });
+        trs.forEach(function(tr){ tb.appendChild(tr); });
+      });
+    });
+  }
+})();
+</script>
