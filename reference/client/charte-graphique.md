@@ -146,8 +146,11 @@ est un halo noir centré : c'est la seule ombre vraiment discordante du lot.
 
   - Le PNG d'en-tête fait 529 px de large pour un affichage à 170 px : le ratio 3×
     couvre correctement les écrans à haute densité. **Rien à changer sur ce point.**
-  - À convertir en **WebP** avec repli PNG — gain typique de 25 à 35 % sur ce type
-    de logo, sans perte visible.
+  - **Correction du 2026-09-08 :** j'avais annoncé 25 à 35 % de gain en WebP. Conversion
+    faite, mesurée : le PNG source est déjà **palettisé**, donc bien plus compact que ce
+    que suppose cette estimation. WebP sans perte donne **13 784 octets contre 14 031**,
+    soit **1,8 %**. Le WebP reste le format à servir, mais il ne faut pas le vendre comme
+    un gain de performance : sur ce logo il n'y en a pas.
   - Ne jamais afficher le logo au-delà de **176 px de large** (529 ÷ 3) : au-delà,
     il pixellise.
   - Si le client retrouve un jour l'original (fichier Illustrator, PDF vectoriel,
@@ -239,6 +242,40 @@ L'ombre de bouton du kit (`0 0 10px rgba(0,0,0,.5)`) est à retirer.
 
 Conteneur 1220 px conservé. Points de rupture 1024 / 767 conservés, plus un palier
 480 px absent aujourd'hui (les blocs inline se cassent en dessous).
+
+---
+
+## Le bandeau du hero — texte incrusté dans une image
+
+`Ambulance-Montpellier.png` est **préchargé en `fetchpriority="high"`** : c'est l'élément
+LCP de la page d'accueil. Trois problèmes cumulés.
+
+| Constat | Mesure |
+|---|---|
+| Poids | **1 526 714 octets** (1,5 Mo) pour 1672 × 941 |
+| Format | PNG pour une image photographique — le pire choix possible |
+| Attribut `alt` | **vide** (`alt=""`) |
+
+Et surtout : **tout le texte du hero est incrusté en pixels dans l'image** — le titre
+« TRANSPORT MÉDICAL 7J/7 À MONTPELLIER », le sous-titre, les quatre blocs de réassurance
+(prescription médicale, fauteuil roulant, soins & hospitalisation, service 7j/7), la
+mention « + de 150 avis vérifiés » et « 4,7/5 sur Google ».
+
+Conséquences :
+
+- Ce texte n'existe pour aucun moteur, ni classique ni génératif. Avec `alt=""`, il
+  n'existe pas non plus pour un lecteur d'écran.
+- Il ne se recompose pas : d'où l'existence d'un **second bandeau**,
+  `A2M-mobile-final.webp` (1024 × 1536), qui refait le même travail en portrait.
+- Un texte en image échoue au critère **WCAG 1.4.5 (Images of Text)**.
+- Le chiffre incrusté dit « + de 150 avis », alors que le H2 de la page dit « + de 140 ».
+  Deux chiffres différents sur la même page, dont un impossible à corriger sans
+  rouvrir le fichier graphique.
+
+**Ce qui est fait dans la maquette :** seule la partie photographique est conservée,
+recadrée (915, 0)–(1672, 648) puis rééchantillonnée à 1080 px et encodée en WebP
+qualité 80 → **38 818 octets, soit 97,5 % de moins**. Tout le texte redevient du HTML.
+Fichier : `maquettes/img/hero-a2m.webp`.
 
 ---
 
