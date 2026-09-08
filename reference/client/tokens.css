@@ -1,0 +1,231 @@
+/* ==========================================================================
+   A2M Ambulance — jetons de design
+   Reconstitués depuis le code source de a2m-ambulance.fr (relevé 2026-09-08).
+   Chaque valeur est reprise de l'existant, aucune couleur inventée.
+   Voir charte-graphique.md pour la provenance de chaque teinte.
+   ========================================================================== */
+
+:root {
+
+  /* --- Marine : couleur de marque ------------------------------------- */
+  --a2m-marine:         #0B2C5F;  /* menu, titres, item actif */
+  --a2m-marine-dark:    #0B2250;  /* encarts de contact */
+  --a2m-marine-light:   #0B3A78;  /* survol de sous-menu */
+
+  /* --- Cyan : accent -------------------------------------------------- */
+  --a2m-cyan:           #0AA0D6;  /* liens, accents */
+  --a2m-cyan-dark:      #00557F;  /* survol */
+  --a2m-cyan-mid:       #0A62A3;  /* pastilles, titres d'icônes */
+
+  /* --- Vert : action, et rien d'autre --------------------------------- */
+  --a2m-action:         #22C55E;  /* CTA appel / réservation */
+  --a2m-action-dark:    #16A34A;  /* survol de CTA */
+
+  /* --- Signal --------------------------------------------------------- */
+  --a2m-amber:          #F4B400;  /* étoiles d'avis */
+
+  /* --- Fonds et bordures ---------------------------------------------- */
+  --a2m-surface:        #FFFFFF;
+  --a2m-surface-alt:    #F7FAFF;  /* alternance de sections */
+  --a2m-tint:           #E0F2FE;  /* pastilles, badges */
+  --a2m-line:           #E5EEF8;  /* cartes, séparateurs */
+
+  /* --- Texte ---------------------------------------------------------- */
+  --a2m-ink:            #1F2937;  /* texte courant */
+  --a2m-ink-soft:       #4B5563;  /* texte secondaire */
+  --a2m-ink-invert:     #FFFFFF;  /* sur fond marine ou vert */
+
+  /* --- Typographies --------------------------------------------------- */
+  --a2m-font-title: "Montserrat", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --a2m-font-body:  "Roboto",     system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  --a2m-fs-h1:    clamp(30px, 4vw, 44px);
+  --a2m-fs-h2:    clamp(26px, 3vw, 34px);
+  --a2m-fs-h3:    24px;
+  --a2m-fs-h4:    20px;
+  --a2m-fs-h5:    18px;
+  --a2m-fs-h6:    16px;
+  --a2m-fs-body:  17px;
+  --a2m-fs-small: 14px;
+
+  --a2m-lh-title: 1.2;
+  --a2m-lh-body:  1.7;
+
+  /* --- Formes --------------------------------------------------------- */
+  --a2m-radius-sm:   8px;
+  --a2m-radius-md:  16px;
+  --a2m-radius-lg:  24px;
+  --a2m-radius-pill: 999px;
+
+  /* --- Ombres --------------------------------------------------------- */
+  --a2m-shadow-sm: 0 2px 12px rgba(11, 44, 95, .06);
+  --a2m-shadow-md: 0 10px 30px rgba(11, 44, 95, .10);
+  --a2m-shadow-lg: 0 20px 50px rgba(11, 44, 95, .15);
+
+  /* --- Gabarit -------------------------------------------------------- */
+  --a2m-container: 1220px;   /* repris du kit Elementor */
+  --a2m-gutter:      20px;
+  --a2m-header-h:    60px;
+
+  /* --- Transition ----------------------------------------------------- */
+  --a2m-transition: all .25s cubic-bezier(.4, 0, .2, 1);
+}
+
+/* Points de rupture (pour mémoire, à utiliser en media queries) :
+   tablette  1024px   ·  mobile  767px   ·  petit mobile  480px          */
+
+
+/* ==========================================================================
+   Application de base
+   ========================================================================== */
+
+body {
+  font-family: var(--a2m-font-body);
+  font-size:   var(--a2m-fs-body);
+  line-height: var(--a2m-lh-body);
+  color:       var(--a2m-ink);
+  background:  var(--a2m-surface);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--a2m-font-title);
+  line-height: var(--a2m-lh-title);
+  color:       var(--a2m-marine);
+  font-weight: 600;
+}
+
+h1 { font-size: var(--a2m-fs-h1); }
+h2 { font-size: var(--a2m-fs-h2); }
+h3 { font-size: var(--a2m-fs-h3); }
+h4 { font-size: var(--a2m-fs-h4); }
+h5 { font-size: var(--a2m-fs-h5); }
+h6 { font-size: var(--a2m-fs-h6); }
+
+a       { color: var(--a2m-cyan); text-decoration: none; }
+a:hover { color: var(--a2m-cyan-dark); }
+
+
+/* ==========================================================================
+   Composants
+   ========================================================================== */
+
+/* CTA principal — appel, réservation. Vert, et uniquement ici. */
+.a2m-btn-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 32px;
+  background: var(--a2m-action-dark);   /* contraste AA avec texte blanc */
+  color: var(--a2m-ink-invert);
+  font-family: var(--a2m-font-body);
+  font-size: 16px;
+  font-weight: 700;
+  border: none;
+  border-radius: var(--a2m-radius-pill);
+  cursor: pointer;
+  transition: var(--a2m-transition);
+}
+.a2m-btn-action:hover {
+  background: var(--a2m-action);
+  color: var(--a2m-ink-invert);
+  transform: translateY(-2px);
+  box-shadow: var(--a2m-shadow-md);
+}
+
+/* CTA secondaire */
+.a2m-btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 28px;
+  background: transparent;
+  color: var(--a2m-marine);
+  font-weight: 700;
+  border: 2px solid var(--a2m-marine);
+  border-radius: var(--a2m-radius-pill);
+  transition: var(--a2m-transition);
+}
+.a2m-btn-ghost:hover {
+  background: var(--a2m-marine);
+  color: var(--a2m-ink-invert);
+}
+
+/* Pastille / badge de réassurance (CPAM, 7j/7, agrément) */
+.a2m-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 18px;
+  background: var(--a2m-tint);
+  color: var(--a2m-marine);
+  font-size: var(--a2m-fs-small);
+  font-weight: 700;
+  border-radius: var(--a2m-radius-pill);
+}
+
+/* Carte */
+.a2m-card {
+  background: var(--a2m-surface);
+  border: 1px solid var(--a2m-line);
+  border-radius: var(--a2m-radius-lg);
+  padding: 28px;
+  box-shadow: var(--a2m-shadow-sm);
+  transition: var(--a2m-transition);
+}
+.a2m-card:hover {
+  border-color: var(--a2m-cyan);
+  box-shadow: var(--a2m-shadow-md);
+  transform: translateY(-4px);
+}
+
+/* Panneau marine — sections d'appel à l'action */
+.a2m-panel {
+  background: var(--a2m-marine);
+  color: var(--a2m-ink-invert);
+  border-radius: var(--a2m-radius-lg);
+  padding: 40px 32px;
+  box-shadow: var(--a2m-shadow-lg);
+}
+.a2m-panel h2,
+.a2m-panel h3 { color: var(--a2m-ink-invert); }
+
+/* Champ de formulaire */
+.a2m-input {
+  width: 100%;
+  padding: 14px 18px;
+  font-family: var(--a2m-font-body);
+  font-size: 15px;
+  color: var(--a2m-ink);
+  background: var(--a2m-surface-alt);
+  border: 2px solid var(--a2m-line);
+  border-radius: var(--a2m-radius-sm);
+  transition: var(--a2m-transition);
+}
+.a2m-input:focus {
+  outline: none;
+  border-color: var(--a2m-cyan);
+  background: var(--a2m-surface);
+  box-shadow: 0 0 0 4px rgba(10, 160, 214, .12);
+}
+
+/* Étoiles d'avis */
+.a2m-stars { color: var(--a2m-amber); letter-spacing: 2px; }
+
+/* Conteneur */
+.a2m-container {
+  max-width: var(--a2m-container);
+  margin-inline: auto;
+  padding-inline: var(--a2m-gutter);
+}
+
+
+/* ==========================================================================
+   Accessibilité — respect de prefers-reduced-motion
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: .01ms !important;
+    transition-duration: .01ms !important;
+  }
+}

@@ -197,8 +197,19 @@ requêtes « prix » et « remboursement ». A2M ne dit rien sur le prix.
 
 ---
 
+## Charte graphique
+
+Reconstituée depuis le code source — voir `charte-graphique.md` (audit et système
+consolidé) et `tokens.css` (variables prêtes à l'emploi).
+
+Constat : **aucune charte n'est configurée**. Le kit Elementor est resté sur les
+valeurs d'usine, à l'exception d'un seul token (`secondary: #003366`). Les couleurs
+sont posées à la main dans trois endroits séparés, d'où **34 bleus distincts**,
+7 verts et 4 polices chargées dont 2 inutilisées.
+
 ## Reste à obtenir
 
-- [ ] Charte graphique (couleurs hex, typographies, logo SVG)
 - [ ] 3e code source concurrent
+- [ ] Validation de la charte consolidée par le client (marine `#0B2C5F`,
+      cyan `#0AA0D6`, vert d'action `#22C55E`, titres Montserrat)
 - [ ] Décision : refonte complète ou reprise de l'existant WordPress
