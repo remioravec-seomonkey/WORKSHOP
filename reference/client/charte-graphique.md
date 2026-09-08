@@ -141,6 +141,18 @@ est un halo noir centré : c'est la seule ombre vraiment discordante du lot.
 
 - **Logo** : `A2M-LOGO-sans-tel-512-512-.png` (512 × 512, favicon et schema)
   et `cropped-cropped-A2M-LOGO-sans-tel.png` (529 × 160, en-tête)
+
+  **Pas de version vectorielle disponible** (confirmé le 2026-09-08). Conséquences :
+
+  - Le PNG d'en-tête fait 529 px de large pour un affichage à 170 px : le ratio 3×
+    couvre correctement les écrans à haute densité. **Rien à changer sur ce point.**
+  - À convertir en **WebP** avec repli PNG — gain typique de 25 à 35 % sur ce type
+    de logo, sans perte visible.
+  - Ne jamais afficher le logo au-delà de **176 px de large** (529 ÷ 3) : au-delà,
+    il pixellise.
+  - Si le client retrouve un jour l'original (fichier Illustrator, PDF vectoriel,
+    ou la charte de son imprimeur), une vectorisation permettrait un logo net à
+    toute taille et un favicon SVG. À demander, sans bloquer le projet.
 - **Nom** : A2M Ambulance · **Baseline employée** : « Votre sérénité, notre priorité »
 - **Téléphone** : 04 67 87 01 07 · **E-mail** : a2mambulance@gmail.com
 - **Adresse** : 1570 Av. Léon Jouhaux, 34070 Montpellier
@@ -162,11 +174,12 @@ réellement porteur de sens, en gardant les teintes déjà les plus employées s
 | **Marine — couleur de marque** | `--a2m-marine` | `#0B2C5F` | menu, item actif, titres ; la plus structurante, et proche du `#003366` du kit |
 | Marine foncé | `--a2m-marine-dark` | `#0B2250` | encarts de contact |
 | Marine clair | `--a2m-marine-light` | `#0B3A78` | survols de sous-menu |
-| **Cyan — accent** | `--a2m-cyan` | `#0AA0D6` | accent OceanWP, liens, auteurs d'avis |
-| Cyan foncé | `--a2m-cyan-dark` | `#00557F` | survols de bouton |
-| Cyan moyen | `--a2m-cyan-mid` | `#0A62A3` | pastilles, titres d'icon-box |
-| **Vert — action** | `--a2m-action` | `#22C55E` | CTA d'appel, le vert le plus fréquent |
-| Vert foncé | `--a2m-action-dark` | `#16A34A` | survol (déduit, ton en dessous) |
+| **Cyan — accent** | `--a2m-cyan` | `#0AA0D6` | accent OceanWP ; aplats et bordures seulement |
+| Lien | `--a2m-link` | `#0A62A3` | liens en texte courant (AA 6,39:1) |
+| Cyan foncé | `--a2m-cyan-dark` | `#00557F` | survol de lien (AA 8,06:1) |
+| **Vert — action** | `--a2m-action` | `#15803D` | seul vert conforme AA en texte blanc (5,02:1) |
+| Vert survol | `--a2m-action-hover` | `#16A34A` | survol de CTA |
+| Vert vif | `--a2m-action-bright` | `#22C55E` | le plus fréquent sur le site, décoratif uniquement |
 | Ambre | `--a2m-amber` | `#F4B400` | étoiles d'avis |
 | Fond clair | `--a2m-tint` | `#E0F2FE` | pastilles et badges |
 | Fond de section | `--a2m-surface-alt` | `#F7FAFF` | alternance de sections |
@@ -181,16 +194,16 @@ le vert ne signale plus rien.
 **Un seul bouton d'appel**, en `--a2m-action`. Les trois variantes actuelles
 (`#00BCD4`, `#1E90FF`, `#4CBEEB`) disparaissent.
 
-### Typographies
+### Typographies — **arbitré le 2026-09-08**
 
-| Usage | Proposition | Pourquoi |
+| Usage | Police | Graisses |
 |---|---|---|
-| Titres | **Montserrat** 600/700 | déjà chargée, non utilisée ; caractère plus affirmé que Roboto |
-| Corps | **Roboto** 400/500 | déjà la police du kit, lisible, aucun coût de migration |
-| À retirer | Roboto Slab, Comfortaa | chargées pour rien |
+| Titres | **Montserrat** | 600 / 700 |
+| Corps | **Roboto** | 400 / 500 |
+| **À retirer** | Roboto Slab, Comfortaa | chargées pour rien aujourd'hui |
 
-Alternative : tout en Roboto, et on retire trois polices sur quatre. Plus rapide,
-moins de personnalité. À trancher avec le client.
+Deux polices au lieu de quatre : deux requêtes de police économisées à chaque visite.
+Charger uniquement les graisses listées, en `font-display: swap`, sous-ensemble latin.
 
 ### Échelle typographique corrigée
 
@@ -229,16 +242,39 @@ Conteneur 1220 px conservé. Points de rupture 1024 / 767 conservés, plus un pa
 
 ---
 
-## Contraste — deux points à vérifier
+## Contraste — mesures WCAG
 
-- `--a2m-action` `#22C55E` sur blanc : ratio ≈ 2,3:1. **Insuffisant pour du texte.**
-  Acceptable en fond de bouton avec texte blanc (ratio ≈ 2,6:1 — toujours limite).
-  Passer les CTA en `#16A34A` porte le texte blanc à ≈ 3,9:1, et à ≈ 4,6:1 avec `#15803D`.
-- `#7A7A7A` sur blanc : ratio ≈ 4,7:1, tout juste conforme AA. Remplacé par `#4B5563`
-  (≈ 7,5:1) dans la palette consolidée.
+Ratios calculés sur la formule de luminance relative WCAG 2.1, texte sur fond blanc.
+Seuil AA texte normal : **4,5:1**. Seuil AA grand texte (≥ 24 px, ou ≥ 18,7 px gras)
+et composants d'interface : **3:1**.
 
-Ratios calculés sur les formules WCAG standard ; à revalider avec un outil dédié
-avant mise en production.
+| Couleur | Rôle sur le site | Ratio | Verdict |
+|---|---|---:|---|
+| `#1F2937` | texte courant proposé | 14,68:1 | conforme |
+| `#0B2C5F` | marine, titres | 13,64:1 | conforme |
+| `#00557F` | survol de lien | 8,06:1 | conforme |
+| `#4B5563` | texte secondaire proposé | 7,56:1 | conforme |
+| `#0A62A3` | **lien proposé** | 6,39:1 | conforme |
+| `#15803D` | **CTA proposé** (texte blanc) | 5,02:1 | conforme |
+| `#7A7A7A` | texte par défaut du kit Elementor | 4,29:1 | **échec** en texte normal |
+| `#16A34A` | vert moyen (texte blanc) | 3,30:1 | grand texte seulement |
+| `#0AA0D6` | **accent actuel, utilisé pour les liens** | 2,99:1 | **échec** en texte normal |
+| `#22C55E` | vert des CTA actuels (texte blanc) | 2,28:1 | **échec** |
+| `#F4B400` | étoiles d'avis | 1,85:1 | décoratif, acceptable |
+
+### Trois corrections qui en découlent
+
+1. **Les liens du site ne sont pas lisibles au standard.** `#0AA0D6` à 2,99:1
+   est en dessous du seuil. Remplacé par `#0A62A3` (6,39:1) — une teinte déjà
+   présente dans le code, sur les pastilles de la top-bar.
+2. **Les boutons d'appel verts non plus.** `#22C55E` avec du texte blanc à 16 px
+   gras donne 2,28:1. `#16A34A` monte à 3,30:1, toujours insuffisant pour cette
+   taille. Seul `#15803D` passe, à 5,02:1 — c'est la valeur retenue.
+3. **Le gris de texte du kit Elementor échoue aussi.** `#7A7A7A` à 4,29:1 est
+   juste sous le seuil. Remplacé par `#4B5563` (7,56:1).
+
+`#0AA0D6` et `#22C55E` restent dans la palette pour les aplats, bordures et grands
+caractères — ils ne disparaissent pas, ils changent de rôle.
 
 ---
 

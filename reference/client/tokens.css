@@ -13,13 +13,19 @@
   --a2m-marine-light:   #0B3A78;  /* survol de sous-menu */
 
   /* --- Cyan : accent -------------------------------------------------- */
-  --a2m-cyan:           #0AA0D6;  /* liens, accents */
-  --a2m-cyan-dark:      #00557F;  /* survol */
-  --a2m-cyan-mid:       #0A62A3;  /* pastilles, titres d'icônes */
+  /* #0AA0D6 ne passe pas AA en texte (2,99:1) : réservé aux aplats,
+     bordures et grands caractères. Les liens utilisent --a2m-link.       */
+  --a2m-cyan:           #0AA0D6;  /* aplats, bordures, accents visuels   */
+  --a2m-link:           #0A62A3;  /* liens en texte courant — AA 6,39:1  */
+  --a2m-cyan-dark:      #00557F;  /* survol de lien — AA 8,06:1          */
 
   /* --- Vert : action, et rien d'autre --------------------------------- */
-  --a2m-action:         #22C55E;  /* CTA appel / réservation */
-  --a2m-action-dark:    #16A34A;  /* survol de CTA */
+  /* #15803D est la valeur par défaut : seule des trois à passer WCAG AA
+     avec du texte blanc (5,02:1). #22C55E et #16A34A sont conservés pour
+     les usages décoratifs et les très grands caractères uniquement.      */
+  --a2m-action:         #15803D;  /* CTA appel / réservation — AA 5,02:1 */
+  --a2m-action-hover:   #16A34A;  /* survol de CTA (3,30:1, décoratif)   */
+  --a2m-action-bright:  #22C55E;  /* accent décoratif, jamais sous texte */
 
   /* --- Signal --------------------------------------------------------- */
   --a2m-amber:          #F4B400;  /* étoiles d'avis */
@@ -101,7 +107,7 @@ h4 { font-size: var(--a2m-fs-h4); }
 h5 { font-size: var(--a2m-fs-h5); }
 h6 { font-size: var(--a2m-fs-h6); }
 
-a       { color: var(--a2m-cyan); text-decoration: none; }
+a       { color: var(--a2m-link); text-decoration: none; }
 a:hover { color: var(--a2m-cyan-dark); }
 
 
@@ -115,7 +121,7 @@ a:hover { color: var(--a2m-cyan-dark); }
   align-items: center;
   gap: 10px;
   padding: 16px 32px;
-  background: var(--a2m-action-dark);   /* contraste AA avec texte blanc */
+  background: var(--a2m-action);        /* AA 5,02:1 avec texte blanc */
   color: var(--a2m-ink-invert);
   font-family: var(--a2m-font-body);
   font-size: 16px;
@@ -126,7 +132,7 @@ a:hover { color: var(--a2m-cyan-dark); }
   transition: var(--a2m-transition);
 }
 .a2m-btn-action:hover {
-  background: var(--a2m-action);
+  background: var(--a2m-action-hover);
   color: var(--a2m-ink-invert);
   transform: translateY(-2px);
   box-shadow: var(--a2m-shadow-md);
@@ -205,7 +211,7 @@ a:hover { color: var(--a2m-cyan-dark); }
   outline: none;
   border-color: var(--a2m-cyan);
   background: var(--a2m-surface);
-  box-shadow: 0 0 0 4px rgba(10, 160, 214, .12);
+  box-shadow: 0 0 0 4px rgba(10, 98, 163, .15);
 }
 
 /* Étoiles d'avis */
