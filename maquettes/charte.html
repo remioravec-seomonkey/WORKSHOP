@@ -1,0 +1,700 @@
+<title>Charte A2M Ambulance</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&family=Roboto:wght@400;500&display=swap">
+<style>
+:root{
+  /* Palette A2M — la page est rendue avec la charte qu'elle documente */
+  --marine:        #0B2C5F;
+  --marine-dark:   #0B2250;
+  --marine-light:  #0B3A78;
+  --cyan:          #0AA0D6;
+  --link:          #0A62A3;
+  --link-hover:    #00557F;
+  --action:        #15803D;
+  --action-hover:  #16A34A;
+  --action-bright: #22C55E;
+  --amber:         #F4B400;
+
+  --surface:       #FFFFFF;
+  --surface-alt:   #F7FAFF;
+  --surface-deep:  #EFF5FF;
+  --tint:          #E0F2FE;
+  --line:          #E5EEF8;
+  --line-strong:   #CBDDF0;
+  --ink:           #1F2937;
+  --ink-soft:      #4B5563;
+  --ink-faint:     #7A8CA3;
+  --ink-invert:    #FFFFFF;
+
+  --ok-bg:   #E7F6EC;  --ok-fg:   #14532D;
+  --warn-bg: #FFF4D6;  --warn-fg: #7A4E00;
+  --bad-bg:  #FDE7E7;  --bad-fg:  #8A1C1C;
+
+  --font-title: "Montserrat", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-body:  "Roboto", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono:  ui-monospace, "SFMono-Regular", "Cascadia Mono", Menlo, Consolas, monospace;
+
+  --r-sm: 8px; --r-md: 16px; --r-lg: 24px; --r-pill: 999px;
+  --sh-sm: 0 2px 12px rgba(11,44,95,.06);
+  --sh-md: 0 10px 30px rgba(11,44,95,.10);
+  --sh-lg: 0 20px 50px rgba(11,44,95,.15);
+  --container: 1180px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --marine:        #7FB4EF;
+    --marine-dark:   #5E97DA;
+    --marine-light:  #A6CCF7;
+    --cyan:          #38BDF8;
+    --link:          #7FC9F0;
+    --link-hover:    #B6E1F8;
+    --action:        #4ADE80;
+    --action-hover:  #22C55E;
+    --action-bright: #86EFAC;
+    --amber:         #FBBF24;
+
+    --surface:       #0A1A2F;
+    --surface-alt:   #0E2340;
+    --surface-deep:  #122A4B;
+    --tint:          #16385C;
+    --line:          #1E3C61;
+    --line-strong:   #2B5386;
+    --ink:           #E6EEF9;
+    --ink-soft:      #A9BDD6;
+    --ink-faint:     #7089A6;
+    --ink-invert:    #071426;
+
+    --ok-bg:   #12351F;  --ok-fg:   #86EFAC;
+    --warn-bg: #3A2C08;  --warn-fg: #FCD34D;
+    --bad-bg:  #3D1616;  --bad-fg:  #FCA5A5;
+
+    --sh-sm: 0 2px 12px rgba(0,0,0,.35);
+    --sh-md: 0 10px 30px rgba(0,0,0,.45);
+    --sh-lg: 0 20px 50px rgba(0,0,0,.55);
+  }
+}
+:root[data-theme="dark"]{
+  --marine:#7FB4EF; --marine-dark:#5E97DA; --marine-light:#A6CCF7;
+  --cyan:#38BDF8; --link:#7FC9F0; --link-hover:#B6E1F8;
+  --action:#4ADE80; --action-hover:#22C55E; --action-bright:#86EFAC;
+  --amber:#FBBF24;
+  --surface:#0A1A2F; --surface-alt:#0E2340; --surface-deep:#122A4B;
+  --tint:#16385C; --line:#1E3C61; --line-strong:#2B5386;
+  --ink:#E6EEF9; --ink-soft:#A9BDD6; --ink-faint:#7089A6; --ink-invert:#071426;
+  --ok-bg:#12351F; --ok-fg:#86EFAC;
+  --warn-bg:#3A2C08; --warn-fg:#FCD34D;
+  --bad-bg:#3D1616; --bad-fg:#FCA5A5;
+  --sh-sm:0 2px 12px rgba(0,0,0,.35);
+  --sh-md:0 10px 30px rgba(0,0,0,.45);
+  --sh-lg:0 20px 50px rgba(0,0,0,.55);
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--surface); color:var(--ink);
+  font-family:var(--font-body); font-size:17px; line-height:1.7;
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,h4{font-family:var(--font-title); text-wrap:balance; margin:0}
+h1{font-weight:700; font-size:clamp(30px,4.4vw,46px); line-height:1.12; letter-spacing:-.015em}
+h2{font-weight:700; font-size:clamp(24px,3vw,32px); line-height:1.2; letter-spacing:-.01em}
+h3{font-weight:600; font-size:20px; line-height:1.3}
+h4{font-weight:600; font-size:16px; line-height:1.35}
+p{margin:0}
+a{color:var(--link); text-underline-offset:3px}
+a:hover{color:var(--link-hover)}
+code,.mono{font-family:var(--font-mono); font-size:.86em; letter-spacing:-.01em}
+:focus-visible{outline:3px solid var(--cyan); outline-offset:2px; border-radius:4px}
+
+.wrap{max-width:var(--container); margin:0 auto; padding:0 24px}
+section{padding:56px 0; border-top:1px solid var(--line)}
+section:first-of-type{border-top:0}
+.eyebrow{
+  font-family:var(--font-title); font-weight:600; font-size:12px;
+  letter-spacing:.14em; text-transform:uppercase; color:var(--cyan); margin-bottom:10px;
+}
+.lede{color:var(--ink-soft); max-width:62ch; margin-top:14px}
+.note{font-size:14px; line-height:1.6; color:var(--ink-soft); max-width:70ch}
+
+/* ---------- En-tête ---------- */
+.masthead{
+  background:linear-gradient(160deg,var(--marine-dark),var(--marine) 55%,var(--marine-light));
+  color:#FFFFFF; padding:60px 0 52px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]) .masthead{
+    background:linear-gradient(160deg,#071426,#0E2340 55%,#173257);
+  }
+}
+:root[data-theme="dark"] .masthead{
+  background:linear-gradient(160deg,#071426,#0E2340 55%,#173257);
+}
+.masthead .eyebrow{color:#9FD8F2}
+.masthead h1{color:#FFFFFF}
+.masthead .lede{color:rgba(255,255,255,.82)}
+.brandline{display:flex; align-items:center; gap:14px; flex-wrap:wrap; margin-bottom:26px}
+.mark{
+  width:46px; height:46px; border-radius:12px; display:grid; place-items:center;
+  background:#FFFFFF; color:var(--marine-dark);
+  font-family:var(--font-title); font-weight:700; font-size:17px; letter-spacing:-.02em;
+  box-shadow:0 6px 18px rgba(0,0,0,.28);
+}
+:root[data-theme="dark"] .mark{color:#0B2250}
+.brandmeta{line-height:1.35}
+.brandmeta strong{font-family:var(--font-title); font-weight:700; font-size:17px; display:block}
+.brandmeta span{font-size:13px; color:rgba(255,255,255,.7)}
+.stamp{
+  margin-left:auto; font-size:12px; letter-spacing:.06em; text-transform:uppercase;
+  font-family:var(--font-title); font-weight:600;
+  color:rgba(255,255,255,.75); border:1px solid rgba(255,255,255,.28);
+  padding:6px 14px; border-radius:var(--r-pill);
+}
+.ledger{
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+  gap:1px; margin-top:36px; background:rgba(255,255,255,.16);
+  border:1px solid rgba(255,255,255,.16); border-radius:var(--r-md); overflow:hidden;
+}
+.ledger div{background:transparent; padding:16px 18px; backdrop-filter:blur(2px)}
+.ledger b{
+  display:block; font-family:var(--font-title); font-weight:700;
+  font-size:26px; line-height:1.1; font-variant-numeric:tabular-nums;
+}
+.ledger .from{color:rgba(255,255,255,.6); text-decoration:line-through; font-size:20px}
+.ledger .arrow{color:#9FD8F2; margin:0 6px}
+.ledger small{
+  display:block; margin-top:4px; font-size:12px; letter-spacing:.08em;
+  text-transform:uppercase; color:rgba(255,255,255,.68);
+}
+
+/* ---------- Mosaïque de l'existant ---------- */
+.mosaic{display:flex; flex-wrap:wrap; gap:8px; margin-top:22px}
+.mosaic i{
+  width:60px; display:flex; flex-direction:column; gap:4px; font-style:normal;
+}
+.mosaic i::before{
+  content:""; display:block; height:44px; border-radius:6px;
+  background:var(--c); border:1px solid rgba(11,44,95,.14);
+}
+.mosaic i::after{
+  content:attr(data-h); display:block;
+  font-family:var(--font-mono); font-size:9.5px; line-height:1; color:var(--ink-faint);
+  text-align:center; letter-spacing:-.03em;
+}
+.mosaic-legend{
+  display:flex; gap:22px; flex-wrap:wrap; margin-top:34px;
+  font-size:13px; color:var(--ink-soft);
+}
+.mosaic-legend b{font-family:var(--font-title); color:var(--ink)}
+
+/* ---------- Palette consolidée ---------- */
+.roles{display:grid; grid-template-columns:repeat(auto-fit,minmax(232px,1fr)); gap:16px; margin-top:24px}
+.role{
+  border:1px solid var(--line); border-radius:var(--r-md); overflow:hidden;
+  background:var(--surface); box-shadow:var(--sh-sm); display:flex; flex-direction:column;
+}
+.role .chip{height:96px; display:flex; align-items:flex-end; padding:10px 14px}
+.role .chip span{
+  font-family:var(--font-mono); font-size:12px; color:#FFFFFF;
+  background:rgba(0,0,0,.28); padding:3px 8px; border-radius:var(--r-pill);
+}
+.role .chip.on-dark span{color:#0B2250; background:rgba(255,255,255,.72)}
+.role .body{padding:14px 16px 16px; display:flex; flex-direction:column; gap:6px; flex:1}
+.role .tok{font-family:var(--font-mono); font-size:12px; color:var(--cyan)}
+.role p{font-size:14px; line-height:1.55; color:var(--ink-soft)}
+.shades{display:flex; gap:0; margin-top:auto; border-top:1px solid var(--line)}
+.shades b{
+  flex:1; padding:7px 4px; text-align:center; font-family:var(--font-mono);
+  font-weight:400; font-size:10px; color:#FFFFFF;
+}
+
+/* ---------- Tableaux ---------- */
+.tablewrap{overflow-x:auto; margin-top:22px; border:1px solid var(--line); border-radius:var(--r-md)}
+table{border-collapse:collapse; width:100%; min-width:560px; font-size:15px}
+th,td{padding:11px 16px; text-align:left; border-bottom:1px solid var(--line)}
+thead th{
+  font-family:var(--font-title); font-weight:600; font-size:12px;
+  letter-spacing:.1em; text-transform:uppercase; color:var(--ink-soft);
+  background:var(--surface-alt);
+}
+tbody tr:last-child td{border-bottom:0}
+td.num{text-align:right; font-variant-numeric:tabular-nums; font-family:var(--font-mono); font-size:14px}
+td .swatch{
+  display:inline-block; width:14px; height:14px; border-radius:4px; vertical-align:-2px;
+  margin-right:8px; border:1px solid rgba(11,44,95,.18);
+}
+.verdict{
+  display:inline-block; font-family:var(--font-title); font-weight:600;
+  font-size:11px; letter-spacing:.06em; text-transform:uppercase;
+  padding:3px 10px; border-radius:var(--r-pill); white-space:nowrap;
+}
+.v-ok{background:var(--ok-bg); color:var(--ok-fg)}
+.v-warn{background:var(--warn-bg); color:var(--warn-fg)}
+.v-bad{background:var(--bad-bg); color:var(--bad-fg)}
+
+/* ---------- Corrections ---------- */
+.fixes{display:grid; gap:14px; margin-top:24px}
+.fix{
+  display:grid; grid-template-columns:auto 1fr; gap:18px; align-items:start;
+  padding:18px 20px; border-radius:var(--r-lg);
+  background:var(--surface-alt); border-left:4px solid var(--action);
+}
+.fix .swap{display:flex; align-items:center; gap:8px; font-family:var(--font-mono); font-size:12px}
+.fix .swap i{width:30px; height:30px; border-radius:8px; display:block; font-style:normal; border:1px solid rgba(11,44,95,.18)}
+.fix .swap em{font-style:normal; color:var(--ink-faint)}
+.fix h4{margin-bottom:4px}
+.fix p{font-size:14px; color:var(--ink-soft); line-height:1.55}
+
+/* ---------- Typographie ---------- */
+.specimen{
+  margin-top:24px; border:1px solid var(--line); border-radius:var(--r-lg);
+  overflow:hidden; background:var(--surface);
+}
+.spec-row{
+  display:grid; grid-template-columns:118px 1fr; gap:20px; align-items:baseline;
+  padding:16px 22px; border-bottom:1px solid var(--line);
+}
+.spec-row:last-child{border-bottom:0}
+.spec-row .meta{
+  font-family:var(--font-mono); font-size:11px; color:var(--ink-faint);
+  line-height:1.5; letter-spacing:-.01em;
+}
+.sample-h1{font-family:var(--font-title); font-weight:700; font-size:clamp(30px,4vw,44px); line-height:1.15; color:var(--marine)}
+.sample-h2{font-family:var(--font-title); font-weight:700; font-size:clamp(26px,3vw,34px); line-height:1.2; color:var(--marine)}
+.sample-h3{font-family:var(--font-title); font-weight:600; font-size:24px; line-height:1.3; color:var(--marine)}
+.sample-h4{font-family:var(--font-title); font-weight:600; font-size:20px; line-height:1.4}
+.sample-body{font-family:var(--font-body); font-weight:400; font-size:17px; line-height:1.7; max-width:60ch; color:var(--ink)}
+.sample-small{font-family:var(--font-body); font-size:14px; line-height:1.5; color:var(--ink-soft)}
+
+/* ---------- Formes ---------- */
+.formes{display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:16px; margin-top:24px}
+.forme{padding:20px; background:var(--surface-alt); border:1px solid var(--line); text-align:center}
+.forme .box{height:56px; background:var(--cyan); margin-bottom:12px}
+.forme .mono{display:block; font-size:12px; color:var(--ink-soft)}
+.forme strong{font-family:var(--font-title); font-weight:600; font-size:14px}
+.f1{border-radius:var(--r-sm)} .f1 .box{border-radius:var(--r-sm)}
+.f2{border-radius:var(--r-md)} .f2 .box{border-radius:var(--r-md)}
+.f3{border-radius:var(--r-lg)} .f3 .box{border-radius:var(--r-lg)}
+.f4{border-radius:var(--r-pill)} .f4 .box{border-radius:var(--r-pill)}
+
+.ombres{display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:22px; margin-top:26px}
+.ombre{
+  background:var(--surface); border:1px solid var(--line); border-radius:var(--r-md);
+  padding:22px; text-align:center;
+}
+.o1{box-shadow:var(--sh-sm)} .o2{box-shadow:var(--sh-md)} .o3{box-shadow:var(--sh-lg)}
+.ombre strong{display:block; font-family:var(--font-title); font-weight:600; font-size:14px; margin-bottom:6px}
+.ombre .mono{font-size:11px; color:var(--ink-soft)}
+
+/* ---------- Composants ---------- */
+.demo{
+  margin-top:24px; padding:30px; border-radius:var(--r-lg);
+  background:var(--surface-alt); border:1px solid var(--line);
+  display:grid; gap:26px;
+}
+.demo-block{display:grid; gap:12px}
+.demo-label{
+  font-family:var(--font-title); font-weight:600; font-size:11px;
+  letter-spacing:.12em; text-transform:uppercase; color:var(--ink-faint);
+}
+.row{display:flex; gap:12px; flex-wrap:wrap; align-items:center}
+.btn{
+  display:inline-flex; align-items:center; gap:9px; padding:13px 26px;
+  border-radius:var(--r-pill); font-family:var(--font-title); font-weight:600;
+  font-size:16px; text-decoration:none; border:2px solid transparent;
+  transition:background .2s ease, color .2s ease, border-color .2s ease;
+}
+.btn-action{background:var(--action); color:#FFFFFF}
+.btn-action:hover{background:var(--action-hover); color:#FFFFFF}
+:root[data-theme="dark"] .btn-action, :root[data-theme="dark"] .btn-action:hover{color:#062012}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]) .btn-action,
+  :root:not([data-theme="light"]) .btn-action:hover{color:#062012}
+}
+.btn-ghost{background:transparent; color:var(--marine); border-color:var(--marine)}
+.btn-ghost:hover{background:var(--marine); color:var(--surface)}
+.pill{
+  display:inline-flex; align-items:center; gap:7px; padding:7px 15px;
+  border-radius:var(--r-pill); background:var(--tint); color:var(--link);
+  font-size:14px; font-weight:500;
+}
+.card{
+  background:var(--surface); border:1px solid var(--line); border-radius:var(--r-md);
+  padding:22px; box-shadow:var(--sh-sm); max-width:340px;
+}
+.card h4{color:var(--marine); margin-bottom:8px}
+.card p{font-size:15px; color:var(--ink-soft)}
+.stars{color:var(--amber); letter-spacing:2px; font-size:18px}
+.rating{display:flex; align-items:center; gap:10px; font-size:15px; color:var(--ink-soft)}
+.rating b{font-family:var(--font-title); color:var(--ink); font-variant-numeric:tabular-nums}
+.field{
+  display:block; width:100%; max-width:340px; padding:12px 15px; font-size:16px;
+  font-family:var(--font-body); color:var(--ink);
+  background:var(--surface); border:1px solid var(--line-strong); border-radius:var(--r-sm);
+}
+.field::placeholder{color:var(--ink-faint)}
+.field:focus{border-color:var(--link); outline:none; box-shadow:0 0 0 4px rgba(10,98,163,.15)}
+
+/* ---------- À retirer ---------- */
+.retirer{display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:14px; margin-top:24px}
+.retirer li{
+  list-style:none; padding:15px 18px; border-radius:var(--r-md);
+  background:var(--bad-bg); color:var(--bad-fg); font-size:14px; line-height:1.55;
+}
+.retirer strong{font-family:var(--font-title); font-weight:600; display:block; margin-bottom:3px; font-size:15px}
+.retirer ul{margin:0; padding:0}
+
+footer{
+  padding:34px 0 46px; border-top:1px solid var(--line);
+  font-size:13px; color:var(--ink-faint); line-height:1.7;
+}
+@media (max-width:720px){
+  .fix{grid-template-columns:1fr}
+  .spec-row{grid-template-columns:1fr; gap:6px}
+  .stamp{margin-left:0}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation:none !important; transition:none !important}
+}
+</style>
+
+<header class="masthead">
+  <div class="wrap">
+    <div class="brandline">
+      <div class="mark">A2M</div>
+      <div class="brandmeta">
+        <strong>A2M Ambulance</strong>
+        <span>Montpellier · Votre sérénité, notre priorité</span>
+      </div>
+      <div class="stamp">Relevé du 8 septembre 2026</div>
+    </div>
+    <div class="eyebrow">Charte graphique reconstituée depuis le code source</div>
+    <h1>Le site n'a pas de charte.<br>Il a trente-quatre bleus.</h1>
+    <p class="lede">
+      Le kit Elementor — l'endroit où la charte devrait vivre — est resté sur les valeurs
+      d'usine, à une exception près. Les couleurs réelles ont été posées à la main, section
+      par section, dans trois endroits séparés. Voici l'inventaire, puis le système ramené
+      à ce qui porte du sens. Rien n'est inventé : chaque valeur est choisie parmi
+      l'existant.
+    </p>
+    <div class="ledger">
+      <div><b><span class="from">34</span><span class="arrow">→</span>4</b><small>couleurs de rôle</small></div>
+      <div><b><span class="from">7</span><span class="arrow">→</span>1</b><small>vert = action</small></div>
+      <div><b><span class="from">4</span><span class="arrow">→</span>2</b><small>polices chargées</small></div>
+      <div><b><span class="from">3</span><span class="arrow">→</span>1</b><small>bouton d'appel</small></div>
+      <div><b>23<span class="arrow">→</span>44<small style="display:inline;text-transform:none;letter-spacing:0">px</small></b><small>taille du H1</small></div>
+    </div>
+  </div>
+</header>
+
+<section class="wrap">
+  <div class="eyebrow">Ce qui est réellement dans le code</div>
+  <h2>Trente-quatre bleus, sept verts</h2>
+  <p class="lede">
+    Chaque carré est une valeur hexadécimale distincte trouvée dans le CSS servi par
+    a2m-ambulance.fr : réglages OceanWP, <code>wp-custom-css</code>, kit Elementor et
+    attributs <code>style=</code> inline. Aucune n'a de rôle défini ailleurs que dans
+    l'endroit où elle a été posée.
+  </p>
+  <div class="mosaic" role="img" aria-label="Mosaïque des 34 bleus et cyans distincts relevés dans le code du site">
+    <i data-h="6EC1E4" style="--c:#6EC1E4"></i><i data-h="003366" style="--c:#003366"></i>
+    <i data-h="0AA0D6" style="--c:#0AA0D6"></i><i data-h="00557F" style="--c:#00557F"></i>
+    <i data-h="0B2C5F" style="--c:#0B2C5F"></i><i data-h="0B2D5C" style="--c:#0B2D5C"></i>
+    <i data-h="0B2F66" style="--c:#0B2F66"></i><i data-h="0B2250" style="--c:#0B2250"></i>
+    <i data-h="0F2B5B" style="--c:#0F2B5B"></i><i data-h="073B78" style="--c:#073B78"></i>
+    <i data-h="0B3A78" style="--c:#0B3A78"></i><i data-h="1E5BB8" style="--c:#1E5BB8"></i>
+    <i data-h="005BAA" style="--c:#005BAA"></i><i data-h="0A62A3" style="--c:#0A62A3"></i>
+    <i data-h="0073E6" style="--c:#0073E6"></i><i data-h="0066B3" style="--c:#0066B3"></i>
+    <i data-h="009CFF" style="--c:#009CFF"></i><i data-h="0B5ED7" style="--c:#0B5ED7"></i>
+    <i data-h="0048FE" style="--c:#0048FE"></i><i data-h="1E90FF" style="--c:#1E90FF"></i>
+    <i data-h="00BCD4" style="--c:#00BCD4"></i><i data-h="4CBEEB" style="--c:#4CBEEB"></i>
+    <i data-h="4054B2" style="--c:#4054B2"></i><i data-h="E6F4FF" style="--c:#E6F4FF"></i>
+    <i data-h="E0F2FE" style="--c:#E0F2FE"></i><i data-h="EFF6FF" style="--c:#EFF6FF"></i>
+    <i data-h="EEF6FF" style="--c:#EEF6FF"></i><i data-h="F0F7FF" style="--c:#F0F7FF"></i>
+    <i data-h="F7FAFF" style="--c:#F7FAFF"></i><i data-h="F8FAFC" style="--c:#F8FAFC"></i>
+    <i data-h="F8FAFF" style="--c:#F8FAFF"></i><i data-h="F2F6FB" style="--c:#F2F6FB"></i>
+    <i data-h="E5EEF8" style="--c:#E5EEF8"></i><i data-h="E6EEF8" style="--c:#E6EEF8"></i>
+  </div>
+  <div class="mosaic" style="margin-top:26px" role="img" aria-label="Mosaïque des 7 verts distincts relevés dans le code du site">
+    <i data-h="22C55E" style="--c:#22C55E"></i><i data-h="2ECC71" style="--c:#2ECC71"></i>
+    <i data-h="25C76F" style="--c:#25C76F"></i><i data-h="1ECB73" style="--c:#1ECB73"></i>
+    <i data-h="3BD615" style="--c:#3BD615"></i><i data-h="61CE70" style="--c:#61CE70"></i>
+    <i data-h="23A455" style="--c:#23A455"></i>
+  </div>
+  <div class="mosaic-legend">
+    <span><b>3 boutons d'appel</b> de 3 couleurs coexistent — <code>#00BCD4</code>,
+      <code>#1E90FF</code> et <code>#4CBEEB</code> (celui réellement affiché).</span>
+    <span><b>Le vert ne signale plus l'action</b> : il sert aussi au survol du menu et
+      au soulignement animé.</span>
+  </div>
+</section>
+
+<section class="wrap">
+  <div class="eyebrow">Le système proposé</div>
+  <h2>Quatre rôles, et c'est tout</h2>
+  <p class="lede">
+    Une couleur de marque, un accent, une couleur d'action, une couleur de signal.
+    Chaque teinte retenue est déjà l'une des plus employées sur le site.
+  </p>
+  <div class="roles">
+    <div class="role">
+      <div class="chip" style="background:#0B2C5F"><span>#0B2C5F</span></div>
+      <div class="body">
+        <h3>Marine</h3>
+        <div class="tok">--a2m-marine</div>
+        <p>Couleur de marque : menu, titres, panneaux. La plus structurante du site,
+          et proche du <code>#003366</code> du kit.</p>
+        <div class="shades">
+          <b style="background:#0B2250">0B2250</b>
+          <b style="background:#0B3A78">0B3A78</b>
+        </div>
+      </div>
+    </div>
+    <div class="role">
+      <div class="chip" style="background:#0AA0D6"><span>#0AA0D6</span></div>
+      <div class="body">
+        <h3>Cyan</h3>
+        <div class="tok">--a2m-cyan</div>
+        <p>Accent visuel : aplats, bordures, pictogrammes. <strong>Jamais en texte</strong> —
+          il ne passe pas le seuil AA.</p>
+        <div class="shades">
+          <b style="background:#0A62A3">0A62A3 lien</b>
+          <b style="background:#00557F">00557F</b>
+        </div>
+      </div>
+    </div>
+    <div class="role">
+      <div class="chip" style="background:#15803D"><span>#15803D</span></div>
+      <div class="body">
+        <h3>Vert action</h3>
+        <div class="tok">--a2m-action</div>
+        <p>Appel et réservation, exclusivement. Rien d'autre n'est vert : c'est ce qui
+          rend le bouton lisible d'un coup d'œil.</p>
+        <div class="shades">
+          <b style="background:#16A34A">16A34A</b>
+          <b style="background:#22C55E">22C55E</b>
+        </div>
+      </div>
+    </div>
+    <div class="role">
+      <div class="chip on-dark" style="background:#F4B400"><span>#F4B400</span></div>
+      <div class="body">
+        <h3>Ambre</h3>
+        <div class="tok">--a2m-amber</div>
+        <p>Étoiles d'avis uniquement. Un signal, pas une couleur d'interface : jamais
+          de texte ni de bouton en ambre.</p>
+        <div class="shades">
+          <b style="background:#1F2937">1F2937 texte</b>
+          <b style="background:#4B5563">4B5563</b>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="wrap">
+  <div class="eyebrow">Mesures WCAG 2.1 · texte sur fond blanc</div>
+  <h2>Le contraste décide, pas le goût</h2>
+  <p class="lede">
+    Ratios calculés sur la formule de luminance relative. Seuil AA : <strong>4,5:1</strong>
+    en texte normal, <strong>3:1</strong> en grand texte (≥ 24 px, ou ≥ 18,7 px gras) et
+    pour les composants d'interface. Trois valeurs employées aujourd'hui échouent.
+  </p>
+  <div class="tablewrap">
+    <table>
+      <thead>
+        <tr><th>Couleur</th><th>Rôle</th><th class="num">Ratio</th><th>Verdict</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><span class="swatch" style="background:#1F2937"></span><code>#1F2937</code></td><td>Texte courant proposé</td><td class="num">14,68:1</td><td><span class="verdict v-ok">conforme</span></td></tr>
+        <tr><td><span class="swatch" style="background:#0B2C5F"></span><code>#0B2C5F</code></td><td>Marine, titres</td><td class="num">13,64:1</td><td><span class="verdict v-ok">conforme</span></td></tr>
+        <tr><td><span class="swatch" style="background:#00557F"></span><code>#00557F</code></td><td>Survol de lien</td><td class="num">8,06:1</td><td><span class="verdict v-ok">conforme</span></td></tr>
+        <tr><td><span class="swatch" style="background:#4B5563"></span><code>#4B5563</code></td><td>Texte secondaire proposé</td><td class="num">7,56:1</td><td><span class="verdict v-ok">conforme</span></td></tr>
+        <tr><td><span class="swatch" style="background:#0A62A3"></span><code>#0A62A3</code></td><td>Lien proposé</td><td class="num">6,39:1</td><td><span class="verdict v-ok">conforme</span></td></tr>
+        <tr><td><span class="swatch" style="background:#15803D"></span><code>#15803D</code></td><td>CTA proposé, texte blanc</td><td class="num">5,02:1</td><td><span class="verdict v-ok">conforme</span></td></tr>
+        <tr><td><span class="swatch" style="background:#7A7A7A"></span><code>#7A7A7A</code></td><td>Texte par défaut du kit Elementor</td><td class="num">4,29:1</td><td><span class="verdict v-bad">échec</span></td></tr>
+        <tr><td><span class="swatch" style="background:#16A34A"></span><code>#16A34A</code></td><td>Vert moyen, texte blanc</td><td class="num">3,30:1</td><td><span class="verdict v-warn">grand texte</span></td></tr>
+        <tr><td><span class="swatch" style="background:#0AA0D6"></span><code>#0AA0D6</code></td><td>Couleur de lien actuelle du site</td><td class="num">2,99:1</td><td><span class="verdict v-bad">échec</span></td></tr>
+        <tr><td><span class="swatch" style="background:#22C55E"></span><code>#22C55E</code></td><td>CTA le plus fréquent, texte blanc</td><td class="num">2,28:1</td><td><span class="verdict v-bad">échec</span></td></tr>
+        <tr><td><span class="swatch" style="background:#F4B400"></span><code>#F4B400</code></td><td>Ambre — étoiles</td><td class="num">1,85:1</td><td><span class="verdict v-bad">jamais en texte</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="fixes">
+    <div class="fix">
+      <div class="swap"><i style="background:#0AA0D6"></i><em>→</em><i style="background:#0A62A3"></i></div>
+      <div>
+        <h4>Les liens du site ne sont pas lisibles</h4>
+        <p>Le cyan <code>#0AA0D6</code> est aujourd'hui la couleur de tous les liens, à 2,99:1.
+          Il reste pour les aplats et les bordures ; le texte de lien passe à
+          <code>#0A62A3</code>, tiré lui aussi du CSS existant.</p>
+      </div>
+    </div>
+    <div class="fix">
+      <div class="swap"><i style="background:#22C55E"></i><em>→</em><i style="background:#15803D"></i></div>
+      <div>
+        <h4>Le bouton « Appelez maintenant » échoue</h4>
+        <p>Du blanc sur <code>#22C55E</code> donne 2,28:1 — c'est le CTA principal du site.
+          <code>#15803D</code> est le seul vert de la famille conforme en texte blanc.
+          Les deux plus clairs deviennent survol et accent décoratif.</p>
+      </div>
+    </div>
+    <div class="fix">
+      <div class="swap"><i style="background:#7A7A7A"></i><em>→</em><i style="background:#4B5563"></i></div>
+      <div>
+        <h4>Le gris de texte par défaut d'Elementor échoue</h4>
+        <p>4,29:1 : sous le seuil, et c'est la valeur héritée partout où rien n'a été
+          redéfini à la main. <code>#4B5563</code> monte à 7,56:1 sans changer l'aspect
+          général.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="wrap">
+  <div class="eyebrow">Deux polices au lieu de quatre</div>
+  <h2>Montserrat aux titres, Roboto au corps</h2>
+  <p class="lede">
+    Montserrat et Comfortaa sont téléchargées à chaque visite sans jamais être déclarées
+    dans le CSS servi. Montserrat prend enfin son rôle ; Comfortaa et Roboto Slab sortent.
+    Le H1, réglé à 23 px — plus petit que plusieurs paragraphes de la page — redevient
+    le titre de la page.
+  </p>
+  <div class="specimen">
+    <div class="spec-row">
+      <div class="meta">H1<br>Montserrat 700<br>clamp(30–44px)/1,15</div>
+      <div class="sample-h1">Ambulance et VSL à Montpellier, 7j/7</div>
+    </div>
+    <div class="spec-row">
+      <div class="meta">H2<br>Montserrat 700<br>clamp(26–34px)/1,2</div>
+      <div class="sample-h2">Transport médical conventionné CPAM</div>
+    </div>
+    <div class="spec-row">
+      <div class="meta">H3<br>Montserrat 600<br>24px/1,3</div>
+      <div class="sample-h3">Votre prise en charge, étape par étape</div>
+    </div>
+    <div class="spec-row">
+      <div class="meta">H4<br>Montserrat 600<br>20px/1,4</div>
+      <div class="sample-h4">Consultation, hospitalisation, dialyse</div>
+    </div>
+    <div class="spec-row">
+      <div class="meta">Corps<br>Roboto 400<br>17px/1,7</div>
+      <div class="sample-body">
+        A2M Ambulance assure vos transports sanitaires à Montpellier et dans l'Hérault :
+        ambulance, VSL et taxi conventionné. Nos équipages sont diplômés d'État et notre
+        service est agréé par la CPAM, avec prise en charge à 100 % en affection de longue
+        durée sur prescription médicale.
+      </div>
+    </div>
+    <div class="spec-row">
+      <div class="meta">Petit<br>Roboto 400<br>14px/1,5</div>
+      <div class="sample-small">
+        1570 Av. Léon Jouhaux, 34070 Montpellier · Agrément CPAM · Devis sur demande
+      </div>
+    </div>
+  </div>
+  <p class="note" style="margin-top:16px">
+    Graisses à charger : Montserrat 600 et 700, Roboto 400 et 500. Sous-ensemble latin,
+    <code>font-display: swap</code>. Deux requêtes de police économisées à chaque visite.
+  </p>
+</section>
+
+<section class="wrap">
+  <div class="eyebrow">Formes et profondeur</div>
+  <h2>Quatre rayons, trois ombres</h2>
+  <p class="lede">
+    Le code actuel contient dix rayons différents (6, 8, 12, 14, 20, 22, 24, 26, 50, 999 px)
+    posés au cas par cas. Quatre suffisent, chacun rattaché à un type d'élément.
+  </p>
+  <div class="formes">
+    <div class="forme f1"><div class="box"></div><strong>Champs, petits boutons</strong><span class="mono">--a2m-radius-sm · 8px</span></div>
+    <div class="forme f2"><div class="box"></div><strong>Cartes</strong><span class="mono">--a2m-radius-md · 16px</span></div>
+    <div class="forme f3"><div class="box"></div><strong>Panneaux, encarts</strong><span class="mono">--a2m-radius-lg · 24px</span></div>
+    <div class="forme f4"><div class="box"></div><strong>CTA, badges, chips</strong><span class="mono">--a2m-radius-pill · 999px</span></div>
+  </div>
+  <div class="ombres">
+    <div class="ombre o1"><strong>Discrète</strong><span class="mono">0 2px 12px rgba(11,44,95,.06)</span></div>
+    <div class="ombre o2"><strong>Carte au survol</strong><span class="mono">0 10px 30px rgba(11,44,95,.10)</span></div>
+    <div class="ombre o3"><strong>Élément flottant</strong><span class="mono">0 20px 50px rgba(11,44,95,.15)</span></div>
+  </div>
+  <p class="note" style="margin-top:18px">
+    Les ombres sont teintées marine, pas noires. L'ombre de bouton du kit Elementor
+    (<code>0 0 10px rgba(0,0,0,.5)</code>) est un halo noir centré sans décalage : à retirer.
+  </p>
+</section>
+
+<section class="wrap">
+  <div class="eyebrow">Composants — rendus avec les valeurs ci-dessus</div>
+  <h2>Ce que ça donne à l'écran</h2>
+  <div class="demo">
+    <div class="demo-block">
+      <div class="demo-label">Boutons</div>
+      <div class="row">
+        <a class="btn btn-action" href="tel:0467870107">Appeler le 04 67 87 01 07</a>
+        <a class="btn btn-ghost" href="#formulaire">Demander un transport</a>
+      </div>
+    </div>
+    <div class="demo-block">
+      <div class="demo-label">Badges de réassurance</div>
+      <div class="row">
+        <span class="pill">Conventionné CPAM</span>
+        <span class="pill">7j/7 · 24h/24</span>
+        <span class="pill">Équipages diplômés d'État</span>
+        <span class="pill">Montpellier et Hérault</span>
+      </div>
+    </div>
+    <div class="demo-block">
+      <div class="demo-label">Carte de service et avis</div>
+      <div class="row" style="align-items:stretch">
+        <div class="card">
+          <h4>Véhicule sanitaire léger (VSL)</h4>
+          <p>Consultation, séance de dialyse, examen programmé. Transport assis,
+            sur prescription médicale, pris en charge par l'Assurance Maladie.</p>
+        </div>
+        <div class="card">
+          <div class="rating">
+            <span class="stars" aria-hidden="true">★★★★★</span>
+            <b>4,7/5</b><span>· plus de 140 avis Google</span>
+          </div>
+          <p style="margin-top:12px">L'ambre ne sert qu'ici. Ces avis existent déjà sur
+            la page d'accueil, en texte brut, sans balisage structuré.</p>
+        </div>
+      </div>
+    </div>
+    <div class="demo-block">
+      <div class="demo-label">Champ de formulaire</div>
+      <label class="sample-small" for="tel-demo">Votre numéro de téléphone</label>
+      <input class="field" id="tel-demo" type="tel" placeholder="06 12 34 56 78">
+      <p class="note">Anneau de focus <code>rgba(10,98,163,.15)</code>. Le site ne contient
+        aujourd'hui <strong>aucun formulaire de contact</strong> — c'est pourtant la moitié
+        de l'objectif de conversion.</p>
+    </div>
+  </div>
+</section>
+
+<section class="wrap">
+  <div class="eyebrow">Décisions actées</div>
+  <h2>Ce qui sort</h2>
+  <ul class="retirer">
+    <li><strong>Roboto Slab et Comfortaa</strong>Chargées à chaque visite, déclarées nulle part.</li>
+    <li><strong>Le vert hors action</strong><code>#1ECB73</code> au survol du menu et <code>#3BD615</code> en soulignement animé : sinon le vert ne signale plus rien.</li>
+    <li><strong>Deux boutons d'appel sur trois</strong><code>#00BCD4</code> et <code>#1E90FF</code> disparaissent. Un seul bouton, en vert action.</li>
+    <li><strong>L'ombre de bouton du kit</strong><code>0 0 10px rgba(0,0,0,.5)</code> — halo noir centré, seule ombre discordante du lot.</li>
+    <li><strong>Le H1 à 23 px</strong>Plus petit que plusieurs paragraphes de la page.</li>
+    <li><strong>Le gris <code>#7A7A7A</code></strong>Défaut Elementor hérité partout, sous le seuil AA.</li>
+  </ul>
+  <p class="note" style="margin-top:26px">
+    <strong>Logo :</strong> pas de version vectorielle disponible. Le PNG d'en-tête fait
+    529 px pour un affichage à 170 px — le ratio 3× couvre les écrans haute densité, rien
+    à changer. À convertir en WebP avec repli PNG (gain de 25 à 35 %). Ne jamais l'afficher
+    au-delà de <strong>176 px de large</strong> : au-delà, il pixellise.
+  </p>
+</section>
+
+<footer class="wrap">
+  Charte reconstituée le 8 septembre 2026 depuis le HTML servi par a2m-ambulance.fr, le kit
+  Elementor <code>post-737.css</code>, les réglages OceanWP inline et <code>wp-custom-css</code>.
+  Aucune couleur n'est inventée : chaque valeur retenue est déjà présente dans le code du site.
+  Les tokens sont versionnés dans <code>reference/client/tokens.css</code>.
+</footer>

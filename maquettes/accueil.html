@@ -1,0 +1,951 @@
+<title>Refonte A2M Ambulance</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&family=Roboto:wght@400;500&display=swap">
+<style>
+/* ================= Tokens A2M — reference/client/tokens.css ================= */
+:root{
+  --marine:#0B2C5F; --marine-dark:#0B2250; --marine-light:#0B3A78;
+  --cyan:#0AA0D6; --link:#0A62A3; --link-hover:#00557F;
+  --action:#15803D; --action-hover:#16A34A; --amber:#F4B400;
+
+  --surface:#FFFFFF; --surface-alt:#F7FAFF; --tint:#E0F2FE;
+  --line:#E5EEF8; --line-strong:#CBDDF0;
+  --ink:#1F2937; --ink-soft:#4B5563; --ink-faint:#7A8CA3;
+  --on-marine:#FFFFFF; --on-marine-soft:rgba(255,255,255,.78);
+  --on-action:#FFFFFF;
+  --hero-grad:linear-gradient(155deg,#0B2250 0%,#0B2C5F 45%,#0B3A78 100%);
+  --annot-bg:#FFF8E1; --annot-fg:#6B4E00; --annot-line:#E8C55A;
+
+  --r-sm:8px; --r-md:16px; --r-lg:24px; --r-pill:999px;
+  --sh-sm:0 2px 12px rgba(11,44,95,.06);
+  --sh-md:0 10px 30px rgba(11,44,95,.10);
+  --sh-lg:0 20px 50px rgba(11,44,95,.15);
+  --font-title:"Montserrat",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --font-body:"Roboto",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --font-mono:ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+  --container:1220px;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --marine:#8FC0F2; --marine-dark:#6BA5E2; --marine-light:#B0D2F8;
+    --cyan:#38BDF8; --link:#8ACFF2; --link-hover:#BFE5FA;
+    --action:#4ADE80; --action-hover:#22C55E; --amber:#FBBF24;
+    --surface:#0A1A2F; --surface-alt:#0E2340; --tint:#16385C;
+    --line:#1E3C61; --line-strong:#2B5386;
+    --ink:#E6EEF9; --ink-soft:#AEC2DA; --ink-faint:#7A93B0;
+    --on-marine:#FFFFFF; --on-marine-soft:rgba(255,255,255,.72);
+    --on-action:#062012;
+    --hero-grad:linear-gradient(155deg,#050F1E 0%,#0C2340 45%,#153259 100%);
+    --annot-bg:#33280A; --annot-fg:#FBD87A; --annot-line:#7A5F14;
+    --sh-sm:0 2px 12px rgba(0,0,0,.4);
+    --sh-md:0 10px 30px rgba(0,0,0,.5);
+    --sh-lg:0 20px 50px rgba(0,0,0,.6);
+  }
+}
+:root[data-theme="dark"]{
+  --marine:#8FC0F2; --marine-dark:#6BA5E2; --marine-light:#B0D2F8;
+  --cyan:#38BDF8; --link:#8ACFF2; --link-hover:#BFE5FA;
+  --action:#4ADE80; --action-hover:#22C55E; --amber:#FBBF24;
+  --surface:#0A1A2F; --surface-alt:#0E2340; --tint:#16385C;
+  --line:#1E3C61; --line-strong:#2B5386;
+  --ink:#E6EEF9; --ink-soft:#AEC2DA; --ink-faint:#7A93B0;
+  --on-marine:#FFFFFF; --on-marine-soft:rgba(255,255,255,.72);
+  --on-action:#062012;
+  --hero-grad:linear-gradient(155deg,#050F1E 0%,#0C2340 45%,#153259 100%);
+  --annot-bg:#33280A; --annot-fg:#FBD87A; --annot-line:#7A5F14;
+  --sh-sm:0 2px 12px rgba(0,0,0,.4);
+  --sh-md:0 10px 30px rgba(0,0,0,.5);
+  --sh-lg:0 20px 50px rgba(0,0,0,.6);
+}
+
+*{box-sizing:border-box}
+body{margin:0;background:var(--surface);color:var(--ink);
+  font-family:var(--font-body);font-size:17px;line-height:1.7;-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{font-family:var(--font-title);margin:0;text-wrap:balance;color:var(--marine)}
+h1{font-weight:700;font-size:clamp(30px,4vw,44px);line-height:1.15;letter-spacing:-.015em}
+h2{font-weight:700;font-size:clamp(26px,3vw,34px);line-height:1.2;letter-spacing:-.01em}
+h3{font-weight:600;font-size:24px;line-height:1.3}
+h4{font-weight:600;font-size:20px;line-height:1.4}
+p{margin:0}
+a{color:var(--link);text-decoration:none;text-underline-offset:3px}
+a:hover{color:var(--link-hover);text-decoration:underline}
+ul{margin:0;padding:0;list-style:none}
+:focus-visible{outline:3px solid var(--cyan);outline-offset:3px;border-radius:6px}
+.wrap{max-width:var(--container);margin:0 auto;padding:0 24px}
+.sec{padding:72px 0}
+.sec-alt{background:var(--surface-alt)}
+.eyebrow{font-family:var(--font-title);font-weight:600;font-size:12px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--cyan);margin-bottom:10px}
+.lede{color:var(--ink-soft);max-width:64ch;margin-top:14px}
+.center{text-align:center}
+.center .lede{margin-left:auto;margin-right:auto}
+
+/* ---------- Annotation de maquette ---------- */
+.mockbar{
+  background:var(--annot-bg);color:var(--annot-fg);border-bottom:1px dashed var(--annot-line);
+  font-family:var(--font-mono);font-size:12.5px;line-height:1.5;padding:10px 24px;
+  display:flex;gap:16px;align-items:center;flex-wrap:wrap;justify-content:center;
+}
+.mockbar b{font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+.mockbar button{
+  font-family:var(--font-mono);font-size:12px;cursor:pointer;
+  background:transparent;color:var(--annot-fg);border:1px solid var(--annot-line);
+  border-radius:var(--r-pill);padding:4px 12px;
+}
+.mockbar button:hover{background:var(--annot-line);color:#231A00}
+.annot{
+  display:none;font-family:var(--font-mono);font-size:12.5px;line-height:1.6;
+  background:var(--annot-bg);color:var(--annot-fg);border-left:3px solid var(--annot-line);
+  padding:10px 14px;border-radius:0 var(--r-sm) var(--r-sm) 0;margin:14px 0;
+}
+body.show-annot .annot{display:block}
+
+/* ---------- Top bar ---------- */
+.topbar{background:var(--marine-dark);color:var(--on-marine);font-size:14px}
+.topbar .wrap{display:flex;gap:18px;align-items:center;flex-wrap:wrap;padding-top:9px;padding-bottom:9px}
+.topbar .geo{color:var(--on-marine-soft)}
+.topbar .badges{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap}
+.tb-badge{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);
+  border-radius:var(--r-pill);padding:3px 12px;font-size:13px}
+.tb-badge.green{background:var(--action);border-color:transparent;color:var(--on-action);font-weight:500}
+
+/* ---------- Header ---------- */
+.site-header{position:sticky;top:0;z-index:40;background:var(--surface);
+  border-bottom:1px solid var(--line);box-shadow:var(--sh-sm)}
+.site-header .wrap{display:flex;align-items:center;gap:26px;padding-top:12px;padding-bottom:12px}
+.logo{display:flex;align-items:center;gap:11px;text-decoration:none}
+.logo .glyph{width:44px;height:44px;border-radius:10px;background:var(--marine);color:#FFFFFF;
+  display:grid;place-items:center;font-family:var(--font-title);font-weight:700;font-size:16px}
+.logo .txt strong{display:block;font-family:var(--font-title);font-weight:700;font-size:19px;
+  color:var(--marine);line-height:1.1}
+.logo .txt span{font-size:12px;color:var(--ink-faint)}
+.nav{display:flex;gap:22px;margin-left:6px}
+.nav a{font-size:15.5px;font-weight:500;color:var(--ink)}
+.nav a:hover{color:var(--link);text-decoration:none}
+.header-cta{margin-left:auto;display:flex;align-items:center;gap:14px}
+.tel-block{text-align:right;line-height:1.25}
+.tel-block small{display:block;font-size:12px;color:var(--ink-faint)}
+.tel-block a{font-family:var(--font-title);font-weight:700;font-size:19px;color:var(--marine)}
+
+/* ---------- Boutons ---------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;
+  padding:14px 26px;border-radius:var(--r-pill);font-family:var(--font-title);
+  font-weight:600;font-size:16px;border:2px solid transparent;cursor:pointer;
+  text-decoration:none;transition:background .2s ease,color .2s ease,border-color .2s ease}
+.btn:hover{text-decoration:none}
+.btn-action{background:var(--action);color:var(--on-action)}
+.btn-action:hover{background:var(--action-hover);color:var(--on-action)}
+.btn-light{background:#FFFFFF;color:var(--marine-dark)}
+.btn-light:hover{background:var(--tint);color:var(--marine-dark)}
+.btn-ghost-l{background:transparent;color:#FFFFFF;border-color:rgba(255,255,255,.55)}
+.btn-ghost-l:hover{background:rgba(255,255,255,.14);color:#FFFFFF}
+.btn-ghost{background:transparent;color:var(--marine);border-color:var(--marine)}
+.btn-ghost:hover{background:var(--marine);color:var(--surface)}
+.btn-sm{padding:10px 20px;font-size:15px}
+
+/* ---------- Hero ---------- */
+.hero{background:var(--hero-grad);color:#FFFFFF;padding:60px 0 74px}
+.hero h1{color:#FFFFFF}
+.hero .grid{display:grid;grid-template-columns:1.15fr .85fr;gap:46px;align-items:start}
+.hero .kicker{font-family:var(--font-title);font-weight:600;font-size:12px;
+  letter-spacing:.16em;text-transform:uppercase;color:#9FD8F2;margin-bottom:14px}
+.hero p.sub{color:var(--on-marine-soft);font-size:18px;margin-top:16px;max-width:52ch}
+.hero .cta-row{display:flex;gap:14px;flex-wrap:wrap;margin-top:28px}
+.chips{display:flex;gap:9px;flex-wrap:wrap;margin-top:26px}
+.chip{display:inline-flex;align-items:center;gap:7px;font-size:14.5px;
+  background:rgba(255,255,255,.11);border:1px solid rgba(255,255,255,.2);
+  border-radius:var(--r-pill);padding:6px 14px;color:#FFFFFF}
+.chip .dot{width:6px;height:6px;border-radius:50%;background:var(--action-hover);display:block}
+.reviews-inline{display:flex;align-items:center;gap:12px;margin-top:26px;
+  padding-top:22px;border-top:1px solid rgba(255,255,255,.18);flex-wrap:wrap}
+.stars{color:var(--amber);letter-spacing:2px;font-size:19px;line-height:1}
+.reviews-inline b{font-family:var(--font-title);font-weight:700;font-size:20px;color:#FFFFFF;
+  font-variant-numeric:tabular-nums}
+.reviews-inline span{color:var(--on-marine-soft);font-size:14.5px}
+
+/* ---------- Formulaire hero ---------- */
+.formcard{background:var(--surface);border-radius:var(--r-lg);box-shadow:var(--sh-lg);
+  padding:26px 26px 24px;border:1px solid var(--line)}
+.formcard h2{font-size:23px;line-height:1.25}
+.formcard .hint{font-size:14px;color:var(--ink-soft);margin-top:6px}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px}
+.f-full{grid-column:1/-1}
+.field label{display:block;font-size:13px;font-weight:500;color:var(--ink-soft);margin-bottom:5px}
+.field input,.field select,.field textarea{
+  width:100%;padding:11px 13px;font-size:16px;font-family:var(--font-body);color:var(--ink);
+  background:var(--surface);border:1px solid var(--line-strong);border-radius:var(--r-sm)}
+.field textarea{resize:vertical;min-height:74px}
+.field input::placeholder,.field textarea::placeholder{color:var(--ink-faint)}
+.field input:focus,.field select:focus,.field textarea:focus{
+  outline:none;border-color:var(--link);box-shadow:0 0 0 4px rgba(10,98,163,.15)}
+.formcard .btn{width:100%;margin-top:16px}
+.rgpd{font-size:12.5px;color:var(--ink-faint);margin-top:12px;line-height:1.5}
+
+/* ---------- Raccourcis ---------- */
+.shortcuts{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;
+  margin-top:-38px;position:relative;z-index:5}
+.shortcut{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-md);
+  padding:18px;box-shadow:var(--sh-md);display:flex;gap:12px;align-items:center;
+  text-decoration:none;transition:box-shadow .2s ease,transform .2s ease}
+.shortcut:hover{box-shadow:var(--sh-lg);transform:translateY(-2px);text-decoration:none}
+.shortcut .ico{width:38px;height:38px;border-radius:10px;background:var(--tint);color:var(--link);
+  display:grid;place-items:center;flex:none}
+.shortcut b{font-family:var(--font-title);font-weight:600;font-size:15.5px;color:var(--marine);
+  display:block;line-height:1.25}
+.shortcut small{font-size:13px;color:var(--ink-soft)}
+
+/* ---------- Services ---------- */
+.cards3{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:22px;margin-top:32px}
+.svc{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);
+  padding:26px;box-shadow:var(--sh-sm);display:flex;flex-direction:column;gap:12px}
+.svc .tagline{font-size:13px;font-weight:500;color:var(--link);text-transform:uppercase;
+  letter-spacing:.08em;font-family:var(--font-title)}
+.svc p{color:var(--ink-soft);font-size:15.5px;line-height:1.6}
+.svc ul{display:grid;gap:7px;font-size:15px;color:var(--ink-soft)}
+.svc ul li{padding-left:22px;position:relative}
+.svc ul li::before{content:"";position:absolute;left:0;top:9px;width:9px;height:9px;
+  border-radius:50%;background:var(--action)}
+.svc .more{margin-top:auto;padding-top:10px;font-weight:500;font-family:var(--font-title)}
+
+/* ---------- Onglets situation ---------- */
+.tabs{display:grid;grid-template-columns:290px 1fr;gap:24px;margin-top:32px;
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);
+  padding:18px;box-shadow:var(--sh-sm)}
+.tablist{display:flex;flex-direction:column;gap:6px}
+.tablist button{
+  text-align:left;font-family:var(--font-title);font-weight:600;font-size:15.5px;
+  padding:14px 16px;border-radius:var(--r-md);border:1px solid transparent;cursor:pointer;
+  background:transparent;color:var(--ink);line-height:1.3;
+  transition:background .18s ease,color .18s ease,border-color .18s ease}
+.tablist button:hover{background:var(--surface-alt)}
+.tablist button[aria-selected="true"]{background:var(--marine);color:#FFFFFF;border-color:var(--marine)}
+.tablist button small{display:block;font-family:var(--font-body);font-weight:400;
+  font-size:13px;color:var(--ink-faint);margin-top:2px}
+.tablist button[aria-selected="true"] small{color:rgba(255,255,255,.72)}
+.tabpanel{padding:18px 22px 22px;background:var(--surface-alt);border-radius:var(--r-md)}
+.tabpanel[hidden]{display:none}
+.tabpanel h3{margin-bottom:8px}
+.tabpanel p{color:var(--ink-soft);font-size:16px}
+.tabpanel .facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+  gap:12px;margin-top:20px}
+.fact{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-md);padding:14px 16px}
+.fact b{display:block;font-family:var(--font-title);font-weight:600;font-size:15px;color:var(--marine)}
+.fact span{font-size:13.5px;color:var(--ink-soft)}
+.tabpanel .btn{margin-top:20px}
+
+/* ---------- Tarifs ---------- */
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r-lg);
+  background:var(--surface);margin-top:30px;box-shadow:var(--sh-sm)}
+table{border-collapse:collapse;width:100%;min-width:620px;font-size:16px}
+th,td{padding:15px 20px;text-align:left;border-bottom:1px solid var(--line)}
+thead th{font-family:var(--font-title);font-weight:600;font-size:12px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--ink-soft);background:var(--surface-alt)}
+tbody tr:last-child td{border-bottom:0}
+td.num{text-align:right;font-variant-numeric:tabular-nums;font-weight:500}
+td strong{font-family:var(--font-title);color:var(--marine)}
+.refund{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px;margin-top:22px}
+.refund div{background:var(--tint);border-radius:var(--r-md);padding:18px 20px}
+.refund b{display:block;font-family:var(--font-title);font-weight:700;font-size:26px;
+  color:var(--marine);font-variant-numeric:tabular-nums;line-height:1.1}
+.refund span{font-size:14.5px;color:var(--ink-soft)}
+
+/* ---------- Étapes ---------- */
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:24px;margin-top:34px}
+.step{position:relative;padding-top:8px}
+.step .n{font-family:var(--font-title);font-weight:700;font-size:15px;color:var(--on-action);
+  background:var(--action);width:34px;height:34px;border-radius:50%;display:grid;place-items:center;
+  margin-bottom:14px}
+.step h4{margin-bottom:6px}
+.step p{color:var(--ink-soft);font-size:15.5px;line-height:1.6}
+
+/* ---------- Avis ---------- */
+.rating-hero{display:flex;align-items:center;gap:20px;flex-wrap:wrap;
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);
+  padding:22px 26px;box-shadow:var(--sh-sm);margin-top:28px}
+.rating-hero .score{font-family:var(--font-title);font-weight:700;font-size:46px;color:var(--marine);
+  line-height:1;font-variant-numeric:tabular-nums}
+.rating-hero .meta{font-size:15px;color:var(--ink-soft)}
+.rating-hero .btn{margin-left:auto}
+.quotes{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:20px;margin-top:20px}
+.quote{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-md);
+  padding:22px;box-shadow:var(--sh-sm)}
+.quote .stars{font-size:16px;margin-bottom:10px}
+.quote p{font-size:15.5px;color:var(--ink-soft);line-height:1.65}
+.quote footer{margin-top:14px;font-size:14px;color:var(--ink-faint);
+  font-family:var(--font-title);font-weight:600}
+
+/* ---------- Communes ---------- */
+.communes{display:flex;flex-wrap:wrap;gap:9px;margin-top:26px}
+.communes a{background:var(--surface);border:1px solid var(--line-strong);border-radius:var(--r-pill);
+  padding:8px 17px;font-size:15px;color:var(--ink);text-decoration:none;transition:all .18s ease}
+.communes a:hover{background:var(--marine);border-color:var(--marine);color:#FFFFFF;text-decoration:none}
+
+/* ---------- FAQ ---------- */
+.faq{margin-top:30px;border:1px solid var(--line);border-radius:var(--r-lg);
+  overflow:hidden;background:var(--surface)}
+.faq details{border-bottom:1px solid var(--line)}
+.faq details:last-child{border-bottom:0}
+.faq summary{cursor:pointer;list-style:none;padding:19px 24px;
+  font-family:var(--font-title);font-weight:600;font-size:17.5px;color:var(--marine);
+  display:flex;gap:16px;align-items:center}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";margin-left:auto;font-size:24px;font-weight:600;
+  color:var(--cyan);line-height:1}
+.faq details[open] summary::after{content:"−"}
+.faq summary:hover{background:var(--surface-alt)}
+.faq .a{padding:0 24px 22px;color:var(--ink-soft);font-size:16px;max-width:80ch}
+
+/* ---------- Contact final ---------- */
+.contact{background:var(--hero-grad);color:#FFFFFF;padding:64px 0}
+.contact h2{color:#FFFFFF}
+.contact .grid{display:grid;grid-template-columns:1fr 1fr;gap:44px;align-items:center}
+.contact p{color:var(--on-marine-soft);margin-top:14px}
+.nap{display:grid;gap:14px;margin-top:26px;font-size:16px}
+.nap div{display:flex;gap:12px;align-items:flex-start}
+.nap b{font-family:var(--font-title);font-weight:600;color:#FFFFFF;min-width:96px;flex:none}
+.nap span{color:var(--on-marine-soft)}
+.nap a{color:#FFFFFF;text-decoration:underline}
+
+/* ---------- Pied de page ---------- */
+.site-footer{background:var(--marine-dark);color:var(--on-marine-soft);padding:52px 0 26px;font-size:15px}
+.fcols{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:32px}
+.site-footer h4{color:#FFFFFF;font-size:15px;letter-spacing:.06em;text-transform:uppercase;
+  margin-bottom:14px}
+.site-footer a{color:var(--on-marine-soft)}
+.site-footer a:hover{color:#FFFFFF}
+.site-footer li{margin-bottom:8px}
+.legal{margin-top:38px;padding-top:20px;border-top:1px solid rgba(255,255,255,.16);
+  font-size:13.5px;display:flex;gap:18px;flex-wrap:wrap}
+
+/* ---------- Barre d'appel mobile ---------- */
+.callbar{position:fixed;left:0;right:0;bottom:0;z-index:50;display:none;
+  gap:10px;padding:10px 14px calc(10px + env(safe-area-inset-bottom));
+  background:var(--surface);border-top:1px solid var(--line);box-shadow:0 -6px 24px rgba(11,44,95,.14)}
+.callbar .btn{flex:1;padding:13px 12px;font-size:15.5px}
+
+/* ---------- Responsive ---------- */
+@media (max-width:1024px){
+  .nav{display:none}
+  .hero .grid{grid-template-columns:1fr;gap:34px}
+  .contact .grid{grid-template-columns:1fr;gap:30px}
+  .fcols{grid-template-columns:1fr 1fr}
+}
+@media (max-width:767px){
+  .tabs{grid-template-columns:1fr}
+  .tablist{flex-direction:row;overflow-x:auto;padding-bottom:6px}
+  .tablist button{flex:none;min-width:196px}
+  .callbar{display:flex}
+  body{padding-bottom:78px}
+  .shortcuts{margin-top:26px}
+  .topbar .badges{margin-left:0}
+  .rating-hero .btn{margin-left:0}
+}
+@media (max-width:480px){
+  .fgrid{grid-template-columns:1fr}
+  .fcols{grid-template-columns:1fr}
+  .sec{padding:52px 0}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important}
+  .shortcut:hover{transform:none}
+}
+</style>
+
+<div class="mockbar">
+  <b>Maquette</b>
+  <span>Refonte page d'accueil · A2M Ambulance · DA reconstituée depuis le code source</span>
+  <button type="button" id="annot-toggle" aria-pressed="false">Afficher les annotations</button>
+</div>
+
+<div class="topbar">
+  <div class="wrap">
+    <span class="geo">Montpellier et tout l'Hérault · 7j/7, 24h/24</span>
+    <div class="badges">
+      <span class="tb-badge">Agrément ARS</span>
+      <span class="tb-badge">Équipages diplômés d'État</span>
+      <span class="tb-badge green">Conventionné CPAM</span>
+    </div>
+  </div>
+</div>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="logo" href="#">
+      <span class="glyph" aria-hidden="true">A2M</span>
+      <span class="txt"><strong>A2M Ambulance</strong><span>Votre sérénité, notre priorité</span></span>
+    </a>
+    <nav class="nav" aria-label="Navigation principale">
+      <a href="#services">Nos services</a>
+      <a href="#situations">Votre situation</a>
+      <a href="#tarifs">Tarifs</a>
+      <a href="#zone">Zone d'intervention</a>
+      <a href="#avis">Avis</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <div class="header-cta">
+      <span class="tel-block">
+        <small>Réservation et urgence</small>
+        <a href="tel:0467870107">04 67 87 01 07</a>
+      </span>
+      <a class="btn btn-action btn-sm" href="#devis">Demander un transport</a>
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+    <div class="annot">Hero repris du modèle Pégomas (H1 + double CTA + badges), mais la colonne
+      de droite porte un FORMULAIRE, pas une image : le site actuel n'en a aucun, sur aucune page.</div>
+    <div class="grid">
+      <div>
+        <div class="kicker">Ambulance · VSL · Taxi conventionné</div>
+        <h1>Transport sanitaire à Montpellier, 7j/7 et 24h/24</h1>
+        <p class="sub">
+          Consultation, hospitalisation, dialyse, retour à domicile : nos équipages diplômés
+          d'État vous conduisent en ambulance, en VSL ou en taxi conventionné. Prise en charge
+          par l'Assurance Maladie sur prescription médicale.
+        </p>
+        <div class="cta-row">
+          <a class="btn btn-action" href="tel:0467870107">Appeler le 04 67 87 01 07</a>
+          <a class="btn btn-ghost-l" href="#devis">Réserver un transport</a>
+        </div>
+        <div class="chips">
+          <span class="chip"><span class="dot"></span>Réponse immédiate</span>
+          <span class="chip"><span class="dot"></span>Tiers payant</span>
+          <span class="chip"><span class="dot"></span>Véhicules désinfectés entre chaque patient</span>
+          <span class="chip"><span class="dot"></span>Transport assis ou allongé</span>
+        </div>
+        <div class="reviews-inline">
+          <span class="stars" aria-hidden="true">★★★★★</span>
+          <b>4,7/5</b>
+          <span>plus de 140 avis Google</span>
+        </div>
+      </div>
+
+      <form class="formcard" id="devis" novalidate>
+        <h2>Réserver un transport</h2>
+        <p class="hint">Réponse sous 30 minutes en journée. Pour un départ immédiat, appelez-nous.</p>
+        <div class="fgrid">
+          <div class="field f-full">
+            <label for="f-nom">Nom du patient</label>
+            <input id="f-nom" name="nom" type="text" placeholder="Nom et prénom" autocomplete="name">
+          </div>
+          <div class="field">
+            <label for="f-tel">Téléphone</label>
+            <input id="f-tel" name="tel" type="tel" placeholder="06 12 34 56 78" autocomplete="tel">
+          </div>
+          <div class="field">
+            <label for="f-date">Date du transport</label>
+            <input id="f-date" name="date" type="date">
+          </div>
+          <div class="field f-full">
+            <label for="f-type">Type de transport</label>
+            <select id="f-type" name="type">
+              <option>Je ne sais pas — conseillez-moi</option>
+              <option>Ambulance (transport allongé)</option>
+              <option>VSL (transport assis)</option>
+              <option>Taxi conventionné</option>
+            </select>
+          </div>
+          <div class="field f-full">
+            <label for="f-trajet">Départ et destination</label>
+            <textarea id="f-trajet" name="trajet"
+              placeholder="Ex. : domicile à Castelnau-le-Lez → CHU Lapeyronie, dialyse"></textarea>
+          </div>
+        </div>
+        <button class="btn btn-action" type="submit">Envoyer ma demande</button>
+        <p class="rgpd">Vos données servent uniquement à traiter cette demande de transport
+          et ne sont jamais transmises à un tiers.</p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<div class="wrap">
+  <div class="shortcuts">
+    <a class="shortcut" href="#services">
+      <span class="ico" aria-hidden="true">🚑</span>
+      <span><b>Ambulance</b><small>Transport allongé</small></span>
+    </a>
+    <a class="shortcut" href="#services">
+      <span class="ico" aria-hidden="true">🚐</span>
+      <span><b>VSL</b><small>Transport assis</small></span>
+    </a>
+    <a class="shortcut" href="#services">
+      <span class="ico" aria-hidden="true">🚕</span>
+      <span><b>Taxi conventionné</b><small>Trajets courts</small></span>
+    </a>
+    <a class="shortcut" href="#tarifs">
+      <span class="ico" aria-hidden="true">💶</span>
+      <span><b>Tarifs et remboursement</b><small>Barème CPAM</small></span>
+    </a>
+  </div>
+</div>
+
+<section class="sec" id="services">
+  <div class="wrap">
+    <div class="annot">Trois cards au lieu de la grille 2×2 de Pégomas : A2M a trois offres,
+      pas six. Chaque card ouvre une page pilier, elle-même déclinée par commune.</div>
+    <div class="eyebrow">Nos services</div>
+    <h2>Trois véhicules, une prescription</h2>
+    <p class="lede">Le choix du véhicule est fixé par votre médecin sur la prescription
+      médicale de transport. En cas de doute, appelez-nous : nous le lisons avec vous.</p>
+    <div class="cards3">
+      <article class="svc">
+        <span class="tagline">Transport allongé</span>
+        <h3>Ambulance</h3>
+        <p>Pour un transport nécessitant une surveillance médicale, un brancardage ou une
+          position allongée obligatoire.</p>
+        <ul>
+          <li>Deux ambulanciers dont un DEA</li>
+          <li>Oxygène et matériel de surveillance à bord</li>
+          <li>Sortie d'hospitalisation et entrée programmée</li>
+        </ul>
+        <a class="more" href="#">Découvrir le transport en ambulance →</a>
+      </article>
+      <article class="svc">
+        <span class="tagline">Transport assis</span>
+        <h3>VSL</h3>
+        <p>Véhicule sanitaire léger pour les patients autonomes ou accompagnés, en position
+          assise, sur prescription.</p>
+        <ul>
+          <li>Séances de dialyse, chimiothérapie, radiothérapie</li>
+          <li>Consultations et examens programmés</li>
+          <li>Accompagnement jusqu'au service</li>
+        </ul>
+        <a class="more" href="#">Découvrir le VSL →</a>
+      </article>
+      <article class="svc">
+        <span class="tagline">Trajets courts</span>
+        <h3>Taxi conventionné</h3>
+        <p>Solution conventionnée pour les trajets ne nécessitant ni matériel médical
+          ni accompagnement particulier.</p>
+        <ul>
+          <li>Dispense d'avance de frais</li>
+          <li>Rendez-vous médicaux réguliers</li>
+          <li>Transports partagés possibles</li>
+        </ul>
+        <a class="more" href="#">Découvrir le taxi conventionné →</a>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="sec sec-alt" id="situations">
+  <div class="wrap">
+    <div class="annot">Onglets verticaux par situation — la trouvaille structurelle de
+      transport-medical.fr (8 onglets par persona B2B), transposée en B2C : une réponse par
+      motif de transport, sans alourdir le menu. Chaque onglet est aussi une page dédiée.</div>
+    <div class="eyebrow">Votre situation</div>
+    <h2>Pourquoi avez-vous besoin d'un transport&nbsp;?</h2>
+    <p class="lede">Chaque motif a ses règles de prise en charge. Choisissez le vôtre.</p>
+
+    <div class="tabs">
+      <div class="tablist" role="tablist" aria-label="Motifs de transport">
+        <button role="tab" id="t-dialyse" aria-controls="p-dialyse" aria-selected="true">
+          Dialyse<small>Trois fois par semaine</small></button>
+        <button role="tab" id="t-hospit" aria-controls="p-hospit" aria-selected="false">
+          Entrée à l'hôpital<small>Transport programmé</small></button>
+        <button role="tab" id="t-sortie" aria-controls="p-sortie" aria-selected="false">
+          Sortie d'hospitalisation<small>Retour à domicile</small></button>
+        <button role="tab" id="t-consult" aria-controls="p-consult" aria-selected="false">
+          Consultation ou examen<small>Rendez-vous ponctuel</small></button>
+        <button role="tab" id="t-onco" aria-controls="p-onco" aria-selected="false">
+          Chimiothérapie, radiothérapie<small>Cure répétée</small></button>
+        <button role="tab" id="t-ehpad" aria-controls="p-ehpad" aria-selected="false">
+          EHPAD et maisons de retraite<small>Convention établissement</small></button>
+      </div>
+
+      <div class="tabpanel" role="tabpanel" id="p-dialyse" aria-labelledby="t-dialyse">
+        <h3>Séances de dialyse</h3>
+        <p>Trois allers-retours par semaine, aux mêmes horaires, avec le même équipage
+          autant que possible. Nous nous calons sur le planning du centre et nous vous
+          attendons à la sortie de séance.</p>
+        <div class="facts">
+          <div class="fact"><b>Prise en charge 100 %</b><span>L'insuffisance rénale terminale est une ALD</span></div>
+          <div class="fact"><b>Transport assis</b><span>VSL dans la majorité des cas</span></div>
+          <div class="fact"><b>Planning fixe</b><span>Réservé une fois pour toutes</span></div>
+        </div>
+        <a class="btn btn-action" href="#devis">Organiser mes trajets de dialyse</a>
+      </div>
+
+      <div class="tabpanel" role="tabpanel" id="p-hospit" aria-labelledby="t-hospit" hidden>
+        <h3>Entrée à l'hôpital ou en clinique</h3>
+        <p>Transport programmé la veille ou le matin même vers le CHU de Montpellier,
+          la clinique du Millénaire, Saint-Roch ou tout établissement de l'Hérault.
+          Nous vous déposons directement au service d'admission.</p>
+        <div class="facts">
+          <div class="fact"><b>Prescription requise</b><span>Établie par votre médecin ou le service</span></div>
+          <div class="fact"><b>Bagages pris en charge</b><span>Aide au portage jusqu'à la chambre</span></div>
+          <div class="fact"><b>Horaire garanti</b><span>Marge prévue pour les formalités</span></div>
+        </div>
+        <a class="btn btn-action" href="#devis">Réserver mon transport d'entrée</a>
+      </div>
+
+      <div class="tabpanel" role="tabpanel" id="p-sortie" aria-labelledby="t-sortie" hidden>
+        <h3>Sortie d'hospitalisation</h3>
+        <p>C'est le transport le plus souvent improvisé, et le plus mal vécu. Le service
+          nous appelle, nous venons chercher le patient dans sa chambre et nous le
+          raccompagnons jusqu'à l'intérieur de son domicile.</p>
+        <div class="facts">
+          <div class="fact"><b>Appel du service accepté</b><span>Le cadre de santé nous joint directement</span></div>
+          <div class="fact"><b>Retour accompagné</b><span>Jusqu'au fauteuil ou au lit</span></div>
+          <div class="fact"><b>Ambulance ou VSL</b><span>Selon l'état à la sortie</span></div>
+        </div>
+        <a class="btn btn-action" href="tel:0467870107">Appeler pour une sortie</a>
+      </div>
+
+      <div class="tabpanel" role="tabpanel" id="p-consult" aria-labelledby="t-consult" hidden>
+        <h3>Consultation, imagerie, analyse</h3>
+        <p>Rendez-vous ponctuel chez un spécialiste, IRM, scanner, prise de sang :
+          transport aller-retour avec attente sur place quand l'examen est court.</p>
+        <div class="facts">
+          <div class="fact"><b>Attente incluse</b><span>Pour les examens de moins d'une heure</span></div>
+          <div class="fact"><b>Taxi conventionné</b><span>Souvent la solution adaptée</span></div>
+          <div class="fact"><b>Réservation à l'avance</b><span>Dès que vous avez la date</span></div>
+        </div>
+        <a class="btn btn-action" href="#devis">Réserver pour un rendez-vous</a>
+      </div>
+
+      <div class="tabpanel" role="tabpanel" id="p-onco" aria-labelledby="t-onco" hidden>
+        <h3>Chimiothérapie et radiothérapie</h3>
+        <p>Des cures rapprochées, une fatigue qui s'installe, et un trajet qui doit
+          rester le plus simple possible. Nous fixons le protocole complet dès la
+          première séance.</p>
+        <div class="facts">
+          <div class="fact"><b>Prise en charge 100 %</b><span>Affection de longue durée</span></div>
+          <div class="fact"><b>Même équipage</b><span>Repères et discrétion</span></div>
+          <div class="fact"><b>Protocole entier</b><span>Toutes les séances réservées d'un coup</span></div>
+        </div>
+        <a class="btn btn-action" href="#devis">Planifier mes séances</a>
+      </div>
+
+      <div class="tabpanel" role="tabpanel" id="p-ehpad" aria-labelledby="t-ehpad" hidden>
+        <h3>EHPAD, maisons de retraite, établissements</h3>
+        <p>Interlocuteur unique pour les équipes soignantes, facturation groupée et
+          créneaux réservés sur les rendez-vous récurrents des résidents.</p>
+        <div class="facts">
+          <div class="fact"><b>Ligne directe</b><span>Un numéro dédié pour l'établissement</span></div>
+          <div class="fact"><b>Facturation groupée</b><span>Un relevé mensuel</span></div>
+          <div class="fact"><b>Créneaux réservés</b><span>Sur les rendez-vous récurrents</span></div>
+        </div>
+        <a class="btn btn-ghost" href="#contact">Mettre en place une convention</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="tarifs">
+  <div class="wrap">
+    <div class="annot">Le vrai angle mort concurrentiel : Pégomas publie ses tarifs CPAM et
+      capte les requêtes « prix », « remboursement », « combien coûte une ambulance ».
+      A2M ne publie rien. Chiffres à valider sur la convention en vigueur avant mise en ligne.</div>
+    <div class="eyebrow">Tarifs et remboursement</div>
+    <h2>Ce que ça coûte, et ce qui vous reste à payer</h2>
+    <p class="lede">Nos tarifs sont ceux de la convention nationale des transporteurs
+      sanitaires. Ils sont identiques chez tous les transporteurs conventionnés :
+      ce qui change, c'est le service.</p>
+
+    <div class="tablewrap">
+      <table>
+        <thead>
+          <tr><th>Type de transport</th><th>Forfait de prise en charge</th>
+            <th class="num">Au kilomètre</th><th>Majorations</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Ambulance</strong><br><span style="font-size:14px;color:var(--ink-soft)">Transport allongé</span></td>
+            <td class="num">≈ 94 €</td><td class="num">2,44 €</td>
+            <td>Nuit, dimanche et jours fériés</td>
+          </tr>
+          <tr>
+            <td><strong>VSL</strong><br><span style="font-size:14px;color:var(--ink-soft)">Transport assis</span></td>
+            <td class="num">≈ 36 €</td><td class="num">1,07 €</td>
+            <td>Trajet partagé : remise appliquée</td>
+          </tr>
+          <tr>
+            <td><strong>Taxi conventionné</strong><br><span style="font-size:14px;color:var(--ink-soft)">Trajets courts</span></td>
+            <td class="num">Tarif préfectoral</td><td class="num">Selon zone</td>
+            <td>Remise conventionnelle déduite</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="refund">
+      <div><b>65 %</b><span>pris en charge par l'Assurance Maladie sur prescription médicale</span></div>
+      <div><b>35 %</b><span>couverts par votre mutuelle dans la plupart des contrats</span></div>
+      <div><b>100 %</b><span>en affection de longue durée, en maternité ou après un accident du travail</span></div>
+    </div>
+    <p class="lede" style="margin-top:22px">
+      <strong>Vous n'avancez rien.</strong> Nous pratiquons le tiers payant : vous nous
+      remettez la prescription et votre carte Vitale, nous facturons directement la caisse
+      et votre mutuelle. <a href="#">Comprendre le remboursement en détail →</a>
+    </p>
+  </div>
+</section>
+
+<section class="sec sec-alt">
+  <div class="wrap center">
+    <div class="eyebrow">Comment ça se passe</div>
+    <h2>Trois étapes, et nous nous occupons du reste</h2>
+    <div class="steps" style="text-align:left">
+      <div class="step">
+        <div class="n">1</div>
+        <h4>Vous nous appelez</h4>
+        <p>Ou vous remplissez le formulaire. Dites-nous simplement d'où part le patient,
+          où il va et quand. Nous vous rappelons pour confirmer.</p>
+      </div>
+      <div class="step">
+        <div class="n">2</div>
+        <h4>Nous préparons le trajet</h4>
+        <p>Nous vérifions la prescription, choisissons le véhicule adapté et calons
+          l'horaire sur celui de votre rendez-vous, pas sur le nôtre.</p>
+      </div>
+      <div class="step">
+        <div class="n">3</div>
+        <h4>Nous vous accompagnons</h4>
+        <p>De votre porte jusqu'au service, et retour. Vous remettez la prescription
+          et la carte Vitale à l'équipage : la facturation se fait sans vous.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="avis">
+  <div class="wrap">
+    <div class="annot">L'actif le plus fort d'A2M, aujourd'hui écrit en texte brut dans un H2
+      et sans aucun balisage structuré. Ici : mis en avant, et rattaché au schema
+      LocalBusiness/MedicalBusiness que le site n'a pas.</div>
+    <div class="eyebrow">Ce que disent nos patients</div>
+    <h2>4,7 sur 5, sur plus de 140 avis Google</h2>
+
+    <div class="rating-hero">
+      <span class="score">4,7</span>
+      <span>
+        <span class="stars" aria-hidden="true">★★★★★</span>
+        <span class="meta" style="display:block">Plus de 140 avis vérifiés sur Google</span>
+      </span>
+      <a class="btn btn-ghost btn-sm" href="#" rel="noopener">Lire tous les avis</a>
+    </div>
+
+    <div class="annot">Emplacements de témoignages — à remplacer par de vrais extraits
+      de la fiche Google, avec l'autorisation d'affichage. Le texte ci-dessous est un
+      exemple de mise en forme, pas un avis réel.</div>
+    <div class="quotes">
+      <blockquote class="quote">
+        <div class="stars" aria-hidden="true">★★★★★</div>
+        <p>Exemple de mise en forme — trois lignes environ, c'est la longueur qui se lit
+          d'un coup d'œil. Les avis les plus utiles sont ceux qui nomment le motif du
+          transport et l'établissement.</p>
+        <footer>Prénom N. · Dialyse au CHU</footer>
+      </blockquote>
+      <blockquote class="quote">
+        <div class="stars" aria-hidden="true">★★★★★</div>
+        <p>Exemple de mise en forme — un avis qui parle de ponctualité et du contact avec
+          l'équipage vaut mieux qu'un avis générique de cinq mots.</p>
+        <footer>Prénom N. · Sortie d'hospitalisation</footer>
+      </blockquote>
+      <blockquote class="quote">
+        <div class="stars" aria-hidden="true">★★★★★</div>
+        <p>Exemple de mise en forme — sélectionner en priorité les avis qui mentionnent
+          une commune : ils renforcent les pages locales.</p>
+        <footer>Prénom N. · Castelnau-le-Lez</footer>
+      </blockquote>
+    </div>
+  </div>
+</section>
+
+<section class="sec sec-alt" id="zone">
+  <div class="wrap">
+    <div class="annot">Maillage service × commune : chaque tag pointe vers une page dédiée
+      (« Ambulance à Castelnau-le-Lez », « VSL à Lattes »…). C'est l'architecture qui va
+      chercher le trafic local, et le site actuel n'en a aucune trace.</div>
+    <div class="eyebrow">Zone d'intervention</div>
+    <h2>Montpellier et les communes de l'Hérault</h2>
+    <p class="lede">Nous intervenons depuis Montpellier sur l'ensemble de la métropole et
+      au-delà. Votre commune n'est pas dans la liste&nbsp;? Appelez-nous, nous nous
+      déplaçons dans tout le département.</p>
+    <div class="communes">
+      <a href="#">Montpellier</a><a href="#">Castelnau-le-Lez</a><a href="#">Lattes</a>
+      <a href="#">Pérols</a><a href="#">Juvignac</a><a href="#">Saint-Jean-de-Védas</a>
+      <a href="#">Le Crès</a><a href="#">Jacou</a><a href="#">Clapiers</a>
+      <a href="#">Montferrier-sur-Lez</a><a href="#">Grabels</a><a href="#">Vendargues</a>
+      <a href="#">Mauguio</a><a href="#">Palavas-les-Flots</a><a href="#">Villeneuve-lès-Maguelone</a>
+      <a href="#">Saint-Clément-de-Rivière</a><a href="#">Baillargues</a><a href="#">Lunel</a>
+      <a href="#">Gigean</a><a href="#">Sète</a>
+    </div>
+  </div>
+</section>
+
+<section class="sec">
+  <div class="wrap">
+    <div class="annot">Bloc FAQ : source du balisage FAQPage et matière première pour les
+      réponses des moteurs génératifs. Reprend mot pour mot les questions réellement tapées.</div>
+    <div class="eyebrow">Questions fréquentes</div>
+    <h2>Ce qu'on nous demande le plus souvent</h2>
+    <div class="faq">
+      <details open>
+        <summary>Ai-je besoin d'une prescription médicale&nbsp;?</summary>
+        <div class="a">Oui, pour tout transport remboursé par l'Assurance Maladie. Elle est
+          établie par votre médecin traitant, le spécialiste ou le service hospitalier, avant
+          le transport dans la mesure du possible. Sans prescription, le transport reste
+          possible mais à votre charge.</div>
+      </details>
+      <details>
+        <summary>Dois-je avancer les frais&nbsp;?</summary>
+        <div class="a">Non. Nous pratiquons le tiers payant : vous nous remettez la prescription
+          et votre carte Vitale, nous facturons directement la caisse et votre mutuelle.</div>
+      </details>
+      <details>
+        <summary>Quelle différence entre une ambulance, un VSL et un taxi conventionné&nbsp;?</summary>
+        <div class="a">L'ambulance transporte allongé, avec deux ambulanciers et du matériel
+          de surveillance. Le VSL transporte assis, jusqu'à trois patients. Le taxi conventionné
+          couvre les trajets ne nécessitant ni matériel ni accompagnement. Le choix est fixé
+          par votre médecin sur la prescription.</div>
+      </details>
+      <details>
+        <summary>Combien de temps à l'avance faut-il réserver&nbsp;?</summary>
+        <div class="a">Pour un rendez-vous programmé, réservez dès que vous avez la date :
+          les créneaux du matin partent vite. Pour une sortie d'hospitalisation ou un besoin
+          immédiat, appelez-nous, nous nous organisons dans la journée.</div>
+      </details>
+      <details>
+        <summary>Intervenez-vous la nuit, le week-end et les jours fériés&nbsp;?</summary>
+        <div class="a">Oui, 7j/7 et 24h/24. Les majorations de nuit, du dimanche et des jours
+          fériés sont celles prévues par la convention nationale et sont prises en charge
+          dans les mêmes proportions.</div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<section class="contact" id="contact">
+  <div class="wrap">
+    <div class="grid">
+      <div>
+        <h2>Un transport à organiser&nbsp;? Parlons-en maintenant.</h2>
+        <p>Une question sur votre prescription, un doute sur le remboursement, une sortie
+          d'hôpital à caler : notre équipe répond directement, sans standard.</p>
+        <div class="cta-row" style="display:flex;gap:14px;flex-wrap:wrap;margin-top:26px">
+          <a class="btn btn-light" href="tel:0467870107">04 67 87 01 07</a>
+          <a class="btn btn-ghost-l" href="#devis">Remplir le formulaire</a>
+        </div>
+      </div>
+      <div class="nap">
+        <div><b>Adresse</b><span>1570 Av. Léon Jouhaux, 34070 Montpellier</span></div>
+        <div><b>Téléphone</b><span><a href="tel:0467870107">04 67 87 01 07</a></span></div>
+        <div><b>E-mail</b><span><a href="mailto:a2mambulance@gmail.com">a2mambulance@gmail.com</a></span></div>
+        <div><b>Horaires</b><span>7j/7, 24h/24 — y compris dimanches et jours fériés</span></div>
+        <div><b>Agrément</b><span>Transporteur sanitaire agréé, conventionné CPAM</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="fcols">
+      <div>
+        <h4>A2M Ambulance</h4>
+        <p style="color:var(--on-marine-soft)">Transport sanitaire à Montpellier et dans
+          l'Hérault. Ambulance, VSL et taxi conventionné, 7j/7 et 24h/24.
+          Votre sérénité, notre priorité.</p>
+      </div>
+      <div>
+        <h4>Services</h4>
+        <ul>
+          <li><a href="#">Ambulance</a></li>
+          <li><a href="#">VSL</a></li>
+          <li><a href="#">Taxi conventionné</a></li>
+          <li><a href="#">Transport TPMR</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Situations</h4>
+        <ul>
+          <li><a href="#">Dialyse</a></li>
+          <li><a href="#">Sortie d'hospitalisation</a></li>
+          <li><a href="#">Chimiothérapie</a></li>
+          <li><a href="#">Consultation et examens</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Communes</h4>
+        <ul>
+          <li><a href="#">Montpellier</a></li>
+          <li><a href="#">Castelnau-le-Lez</a></li>
+          <li><a href="#">Lattes</a></li>
+          <li><a href="#">Toutes les communes</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="legal">
+      <span>© A2M Ambulance</span>
+      <a href="#">Mentions légales</a>
+      <a href="#">Politique de confidentialité</a>
+      <a href="#">Gestion des cookies</a>
+      <a href="#">Plan du site</a>
+    </div>
+  </div>
+</footer>
+
+<div class="callbar">
+  <a class="btn btn-action" href="tel:0467870107">Appeler</a>
+  <a class="btn btn-ghost" href="#devis">Réserver</a>
+</div>
+
+<script>
+(function(){
+  // Onglets « Votre situation »
+  var list = document.querySelector('.tablist');
+  if (list) {
+    var tabs = Array.prototype.slice.call(list.querySelectorAll('[role="tab"]'));
+    function select(tab){
+      tabs.forEach(function(t){
+        var panel = document.getElementById(t.getAttribute('aria-controls'));
+        var on = (t === tab);
+        t.setAttribute('aria-selected', on ? 'true' : 'false');
+        t.tabIndex = on ? 0 : -1;
+        if (panel) panel.hidden = !on;
+      });
+    }
+    tabs.forEach(function(tab, i){
+      tab.tabIndex = tab.getAttribute('aria-selected') === 'true' ? 0 : -1;
+      tab.addEventListener('click', function(){ select(tab); });
+      tab.addEventListener('keydown', function(e){
+        var next = null;
+        if (e.key === 'ArrowDown' || e.key === 'ArrowRight') next = tabs[(i + 1) % tabs.length];
+        if (e.key === 'ArrowUp'   || e.key === 'ArrowLeft')  next = tabs[(i - 1 + tabs.length) % tabs.length];
+        if (e.key === 'Home') next = tabs[0];
+        if (e.key === 'End')  next = tabs[tabs.length - 1];
+        if (next){ e.preventDefault(); select(next); next.focus(); }
+      });
+    });
+  }
+
+  // Annotations de maquette
+  var btn = document.getElementById('annot-toggle');
+  if (btn) {
+    btn.addEventListener('click', function(){
+      var on = document.body.classList.toggle('show-annot');
+      btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+      btn.textContent = on ? 'Masquer les annotations' : 'Afficher les annotations';
+    });
+  }
+
+  // Le formulaire est une maquette : pas d'envoi
+  var form = document.getElementById('devis');
+  if (form) {
+    form.addEventListener('submit', function(e){
+      e.preventDefault();
+      var p = form.querySelector('.rgpd');
+      if (p) {
+        p.textContent = 'Maquette — aucune donnée n’est envoyée. Le formulaire réel enverra la demande par e-mail avec accusé de réception.';
+        p.style.color = 'var(--action)';
+      }
+    });
+  }
+})();
+</script>
