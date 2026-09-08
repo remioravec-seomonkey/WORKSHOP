@@ -14,7 +14,7 @@
   --ink:#1F2937; --ink-soft:#4B5563; --ink-faint:#7A8CA3;
   --on-marine:#FFFFFF; --on-marine-soft:rgba(255,255,255,.78);
   --on-action:#FFFFFF;
-  --hero-grad:linear-gradient(155deg,#0B2250 0%,#0B2C5F 45%,#0B3A78 100%);
+  --band-grad:linear-gradient(155deg,#0B2250 0%,#0B2C5F 45%,#0B3A78 100%);
   --annot-bg:#FFF8E1; --annot-fg:#6B4E00; --annot-line:#E8C55A;
 
   --r-sm:8px; --r-md:16px; --r-lg:24px; --r-pill:999px;
@@ -36,7 +36,7 @@
     --ink:#E6EEF9; --ink-soft:#AEC2DA; --ink-faint:#7A93B0;
     --on-marine:#FFFFFF; --on-marine-soft:rgba(255,255,255,.72);
     --on-action:#062012;
-    --hero-grad:linear-gradient(155deg,#050F1E 0%,#0C2340 45%,#153259 100%);
+    --band-grad:linear-gradient(155deg,#050F1E 0%,#0C2340 45%,#153259 100%);
     --annot-bg:#33280A; --annot-fg:#FBD87A; --annot-line:#7A5F14;
     --sh-sm:0 2px 12px rgba(0,0,0,.4);
     --sh-md:0 10px 30px rgba(0,0,0,.5);
@@ -52,7 +52,7 @@
   --ink:#E6EEF9; --ink-soft:#AEC2DA; --ink-faint:#7A93B0;
   --on-marine:#FFFFFF; --on-marine-soft:rgba(255,255,255,.72);
   --on-action:#062012;
-  --hero-grad:linear-gradient(155deg,#050F1E 0%,#0C2340 45%,#153259 100%);
+  --band-grad:linear-gradient(155deg,#050F1E 0%,#0C2340 45%,#153259 100%);
   --annot-bg:#33280A; --annot-fg:#FBD87A; --annot-line:#7A5F14;
   --sh-sm:0 2px 12px rgba(0,0,0,.4);
   --sh-md:0 10px 30px rgba(0,0,0,.5);
@@ -146,32 +146,36 @@ body.show-annot .annot{display:block}
 .btn-sm{padding:10px 20px;font-size:15px}
 
 /* ---------- Hero ---------- */
-.hero{background:var(--hero-grad);color:#FFFFFF;padding:60px 0 74px}
-.hero h1{color:#FFFFFF}
+.hero{background:var(--surface);padding:56px 0 74px;position:relative;overflow:hidden}
+/* halo bleu tres pale derriere la photo : raccorde le fond blanc au ciel de l'image */
+.hero::after{content:"";position:absolute;top:-14%;right:-10%;width:56%;height:120%;
+  background:radial-gradient(closest-side,var(--tint),transparent 72%);
+  opacity:.75;pointer-events:none;z-index:0}
+.hero .wrap{position:relative;z-index:1}
 .hero .grid{display:grid;grid-template-columns:1.15fr .85fr;gap:46px;align-items:start}
 .hero .kicker{font-family:var(--font-title);font-weight:600;font-size:12px;
-  letter-spacing:.16em;text-transform:uppercase;color:#9FD8F2;margin-bottom:14px}
-.hero p.sub{color:var(--on-marine-soft);font-size:18px;margin-top:16px;max-width:52ch}
+  letter-spacing:.16em;text-transform:uppercase;color:var(--cyan);margin-bottom:14px}
+.hero p.sub{color:var(--ink-soft);font-size:18px;margin-top:16px;max-width:52ch}
 .hero .cta-row{display:flex;gap:14px;flex-wrap:wrap;margin-top:28px}
 .chips{display:flex;gap:9px;flex-wrap:wrap;margin-top:26px}
 .chip{display:inline-flex;align-items:center;gap:7px;font-size:14.5px;
-  background:rgba(255,255,255,.11);border:1px solid rgba(255,255,255,.2);
-  border-radius:var(--r-pill);padding:6px 14px;color:#FFFFFF}
-.chip .dot{width:6px;height:6px;border-radius:50%;background:var(--action-hover);display:block}
+  background:var(--surface-alt);border:1px solid var(--line-strong);
+  border-radius:var(--r-pill);padding:6px 14px;color:var(--ink)}
+.chip .dot{width:6px;height:6px;border-radius:50%;background:var(--action);display:block}
 .reviews-inline{display:flex;align-items:center;gap:12px;margin-top:26px;
-  padding-top:22px;border-top:1px solid rgba(255,255,255,.18);flex-wrap:wrap}
+  padding-top:22px;border-top:1px solid var(--line);flex-wrap:wrap}
 .stars{color:var(--amber);letter-spacing:2px;font-size:19px;line-height:1}
-.reviews-inline b{font-family:var(--font-title);font-weight:700;font-size:20px;color:#FFFFFF;
+.reviews-inline b{font-family:var(--font-title);font-weight:700;font-size:20px;color:var(--ink);
   font-variant-numeric:tabular-nums}
-.reviews-inline span{color:var(--on-marine-soft);font-size:14.5px}
+.reviews-inline span{color:var(--ink-soft);font-size:14.5px}
 
 /* ---------- Visuel du hero ---------- */
 .hero-visual{position:relative}
 .hero-visual img{display:block;width:100%;height:auto;border-radius:var(--r-lg);
-  box-shadow:var(--sh-lg);border:1px solid rgba(255,255,255,.18)}
+  box-shadow:var(--sh-md);border:1px solid var(--line)}
 
 /* ---------- Barre de reservation ---------- */
-.bookingbar{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);
+.bookingbar{background:var(--surface);border:1px solid var(--line-strong);border-radius:var(--r-lg);
   box-shadow:var(--sh-lg);padding:24px 26px 20px;margin-top:-52px;position:relative;z-index:6}
 .bookingbar h2{font-size:23px;line-height:1.25}
 .bk-head{display:flex;gap:8px 22px;align-items:baseline;flex-wrap:wrap}
@@ -303,7 +307,7 @@ td strong{font-family:var(--font-title);color:var(--marine)}
 .faq .a{padding:0 24px 22px;color:var(--ink-soft);font-size:16px;max-width:80ch}
 
 /* ---------- Contact final ---------- */
-.contact{background:var(--hero-grad);color:#FFFFFF;padding:64px 0}
+.contact{background:var(--band-grad);color:#FFFFFF;padding:64px 0}
 .contact h2{color:#FFFFFF}
 .contact .grid{display:grid;grid-template-columns:1fr 1fr;gap:44px;align-items:center}
 .contact p{color:var(--on-marine-soft);margin-top:14px}
@@ -419,7 +423,7 @@ td strong{font-family:var(--font-title);color:var(--marine)}
         </p>
         <div class="cta-row">
           <a class="btn btn-action" href="tel:0467870107">Appeler le 04 67 87 01 07</a>
-          <a class="btn btn-ghost-l" href="#devis">Réserver un transport</a>
+          <a class="btn btn-ghost" href="#devis">Réserver un transport</a>
         </div>
         <div class="chips">
           <span class="chip"><span class="dot"></span>Réponse immédiate</span>
@@ -500,7 +504,7 @@ td strong{font-family:var(--font-title);color:var(--marine)}
   </div>
 </div>
 
-<section class="sec" id="services">
+<section class="sec sec-alt" id="services">
   <div class="wrap">
     <div class="annot">Trois cards au lieu de la grille 2×2 de Pégomas : A2M a trois offres,
       pas six. Chaque card ouvre une page pilier, elle-même déclinée par commune.</div>
@@ -549,7 +553,7 @@ td strong{font-family:var(--font-title);color:var(--marine)}
   </div>
 </section>
 
-<section class="sec sec-alt" id="situations">
+<section class="sec" id="situations">
   <div class="wrap">
     <div class="annot">Onglets verticaux par situation — la trouvaille structurelle de
       transport-medical.fr (8 onglets par persona B2B), transposée en B2C : une réponse par
@@ -653,7 +657,7 @@ td strong{font-family:var(--font-title);color:var(--marine)}
   </div>
 </section>
 
-<section class="sec" id="tarifs">
+<section class="sec sec-alt" id="tarifs">
   <div class="wrap">
     <div class="annot">Le vrai angle mort concurrentiel : Pégomas publie ses tarifs CPAM et
       capte les requêtes « prix », « remboursement », « combien coûte une ambulance ».
@@ -703,7 +707,7 @@ td strong{font-family:var(--font-title);color:var(--marine)}
   </div>
 </section>
 
-<section class="sec sec-alt">
+<section class="sec">
   <div class="wrap center">
     <div class="eyebrow">Comment ça se passe</div>
     <h2>Trois étapes, et nous nous occupons du reste</h2>
@@ -730,7 +734,7 @@ td strong{font-family:var(--font-title);color:var(--marine)}
   </div>
 </section>
 
-<section class="sec" id="avis">
+<section class="sec sec-alt" id="avis">
   <div class="wrap">
     <div class="annot">L'actif le plus fort d'A2M, aujourd'hui écrit en texte brut dans un H2
       et sans aucun balisage structuré. Ici : mis en avant, et rattaché au schema
@@ -774,7 +778,7 @@ td strong{font-family:var(--font-title);color:var(--marine)}
   </div>
 </section>
 
-<section class="sec sec-alt" id="zone">
+<section class="sec" id="zone">
   <div class="wrap">
     <div class="annot">Maillage service × commune : chaque tag pointe vers une page dédiée
       (« Ambulance à Castelnau-le-Lez », « VSL à Lattes »…). C'est l'architecture qui va
@@ -796,7 +800,7 @@ td strong{font-family:var(--font-title);color:var(--marine)}
   </div>
 </section>
 
-<section class="sec">
+<section class="sec sec-alt">
   <div class="wrap">
     <div class="annot">Bloc FAQ : source du balisage FAQPage et matière première pour les
       réponses des moteurs génératifs. Reprend mot pour mot les questions réellement tapées.</div>
