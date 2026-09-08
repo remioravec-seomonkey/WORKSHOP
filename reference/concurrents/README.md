@@ -129,10 +129,18 @@ Le choix de l'axe dominant dépend de la cible du client.
 
 ---
 
+## Cadrage arrêté
+
+- **Client** : A2M Ambulance (Montpellier) — voir `reference/client/README.md`
+- **Cible** : B2C (patients, familles)
+- **Objectif de conversion** : formulaire + appels
+
+→ Le modèle de référence est donc **ambulance-pegomas.fr** (local / réassurance),
+pas transport-medical.fr (B2B / process). L'architecture visée est **service × commune**,
+pas la segmentation par persona en onglets.
+
 ## En attente pour continuer
 
 - [ ] 3e code source concurrent
-- [ ] Code source / URL du site du client
 - [ ] Charte graphique (couleurs hex, typos, logo SVG)
-- [ ] Cible et objectif de conversion (leads, contrats, appels)
-- [ ] Choix de la techno (statique / Astro / Next / CMS)
+- [ ] Choix de la techno (statique / Astro / Next / reprise WordPress)
