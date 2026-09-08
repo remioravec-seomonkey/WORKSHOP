@@ -26,38 +26,9 @@
   --font-mono:ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
   --container:1220px;
 }
-@media (prefers-color-scheme:dark){
-  :root:not([data-theme="light"]){
-    --marine:#8FC0F2; --marine-dark:#6BA5E2; --marine-light:#B0D2F8;
-    --cyan:#38BDF8; --link:#8ACFF2; --link-hover:#BFE5FA;
-    --action:#4ADE80; --action-hover:#22C55E; --amber:#FBBF24;
-    --surface:#0A1A2F; --surface-alt:#0E2340; --tint:#16385C;
-    --line:#1E3C61; --line-strong:#2B5386;
-    --ink:#E6EEF9; --ink-soft:#AEC2DA; --ink-faint:#7A93B0;
-    --on-marine:#FFFFFF; --on-marine-soft:rgba(255,255,255,.72);
-    --on-action:#062012;
-    --band-grad:linear-gradient(155deg,#050F1E 0%,#0C2340 45%,#153259 100%);
-    --annot-bg:#33280A; --annot-fg:#FBD87A; --annot-line:#7A5F14;
-    --sh-sm:0 2px 12px rgba(0,0,0,.4);
-    --sh-md:0 10px 30px rgba(0,0,0,.5);
-    --sh-lg:0 20px 50px rgba(0,0,0,.6);
-  }
-}
-:root[data-theme="dark"]{
-  --marine:#8FC0F2; --marine-dark:#6BA5E2; --marine-light:#B0D2F8;
-  --cyan:#38BDF8; --link:#8ACFF2; --link-hover:#BFE5FA;
-  --action:#4ADE80; --action-hover:#22C55E; --amber:#FBBF24;
-  --surface:#0A1A2F; --surface-alt:#0E2340; --tint:#16385C;
-  --line:#1E3C61; --line-strong:#2B5386;
-  --ink:#E6EEF9; --ink-soft:#AEC2DA; --ink-faint:#7A93B0;
-  --on-marine:#FFFFFF; --on-marine-soft:rgba(255,255,255,.72);
-  --on-action:#062012;
-  --band-grad:linear-gradient(155deg,#050F1E 0%,#0C2340 45%,#153259 100%);
-  --annot-bg:#33280A; --annot-fg:#FBD87A; --annot-line:#7A5F14;
-  --sh-sm:0 2px 12px rgba(0,0,0,.4);
-  --sh-md:0 10px 30px rgba(0,0,0,.5);
-  --sh-lg:0 20px 50px rgba(0,0,0,.6);
-}
+/* Maquette d'un site public : le rendu est identique pour tous les visiteurs.
+   Pas de variante sombre — un site d'ambulance se voit en clair, point.
+   La palette ci-dessus est donc la seule, et body peint son fond explicitement. */
 
 *{box-sizing:border-box}
 body{margin:0;background:var(--surface);color:var(--ink);
