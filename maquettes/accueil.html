@@ -240,21 +240,46 @@ td strong{font-family:var(--font-title);color:var(--marine)}
 .step h4{margin-bottom:6px}
 .step p{color:var(--ink-soft);font-size:15.5px;line-height:1.6}
 
-/* ---------- Avis ---------- */
-.rating-hero{display:flex;align-items:center;gap:20px;flex-wrap:wrap;
-  background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);
-  padding:22px 26px;box-shadow:var(--sh-sm);margin-top:28px}
-.rating-hero .score{font-family:var(--font-title);font-weight:700;font-size:46px;color:var(--marine);
-  line-height:1;font-variant-numeric:tabular-nums}
-.rating-hero .meta{font-size:15px;color:var(--ink-soft)}
-.rating-hero .btn{margin-left:auto}
-.quotes{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:20px;margin-top:20px}
-.quote{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-md);
-  padding:22px;box-shadow:var(--sh-sm)}
-.quote .stars{font-size:16px;margin-bottom:10px}
-.quote p{font-size:15.5px;color:var(--ink-soft);line-height:1.65}
-.quote footer{margin-top:14px;font-size:14px;color:var(--ink-faint);
-  font-family:var(--font-title);font-weight:600}
+/* ---------- Avis : score fixe + mur d'avis en defilement ---------- */
+.reviews{display:grid;grid-template-columns:330px 1fr;gap:34px;margin-top:32px;
+  align-items:start}
+
+.rating-hero{background:var(--surface);border:1px solid var(--line);
+  border-radius:var(--r-lg);padding:26px;box-shadow:var(--sh-sm);position:sticky;top:96px}
+.rating-hero .score{font-family:var(--font-title);font-weight:700;font-size:58px;
+  color:var(--marine);line-height:1;font-variant-numeric:tabular-nums;display:block}
+.rating-hero .stars{font-size:22px;display:block;margin-top:10px}
+.rating-hero .meta{font-size:15px;color:var(--ink-soft);display:block;margin-top:8px}
+.rating-hero .btn{width:100%;margin-top:20px}
+.rating-hero .src{font-size:13px;color:var(--ink-faint);line-height:1.5;margin-top:16px;
+  padding-top:16px;border-top:1px solid var(--line)}
+
+/* Deux colonnes qui defilent en continu, en sens opposes.
+   Le masque efface les bords haut et bas pour que les cartes n'apparaissent
+   pas en coupe franche. */
+.rw{display:grid;grid-template-columns:1fr 1fr;gap:20px;height:520px;overflow:hidden;
+  -webkit-mask-image:linear-gradient(to bottom,transparent,#000 11%,#000 89%,transparent);
+  mask-image:linear-gradient(to bottom,transparent,#000 11%,#000 89%,transparent)}
+.rw-col{overflow:hidden}
+.rw-track{display:flex;flex-direction:column;gap:20px;will-change:transform}
+.rw-col:nth-child(1) .rw-track{animation:rw-scroll 42s linear infinite}
+.rw-col:nth-child(2) .rw-track{animation:rw-scroll 52s linear infinite reverse}
+@keyframes rw-scroll{from{transform:translateY(0)}to{transform:translateY(-50%)}}
+.rw:hover .rw-track,.rw:focus-within .rw-track{animation-play-state:paused}
+
+.rw-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-md);
+  padding:22px;box-shadow:var(--sh-sm);margin:0}
+.rw-card .stars{font-size:16px;display:block;margin-bottom:10px}
+.rw-card blockquote{margin:0;font-size:15.5px;color:var(--ink-soft);line-height:1.65}
+.rw-card figcaption{margin-top:14px;font-size:14px;line-height:1.4}
+.rw-card figcaption b{display:block;font-family:var(--font-title);font-weight:600;
+  color:var(--marine)}
+.rw-card figcaption span{color:var(--ink-faint);font-size:13.5px}
+
+.rw-note{margin-top:18px;font-size:13.5px;color:var(--ink-faint);
+  display:flex;align-items:center;gap:8px}
+.rw-note::before{content:"";width:7px;height:7px;border-radius:50%;
+  background:var(--amber);flex:none}
 
 /* ---------- Communes ---------- */
 .communes{display:flex;flex-wrap:wrap;gap:9px;margin-top:26px}
@@ -321,7 +346,13 @@ td strong{font-family:var(--font-title);color:var(--marine)}
   .callbar{display:flex}
   body{padding-bottom:78px}
   .topbar .badges{margin-left:0}
-  .rating-hero .btn{margin-left:0}
+  .reviews{grid-template-columns:1fr;gap:24px}
+  .rating-hero{position:static}
+  .rw{height:440px}
+}
+@media (max-width:560px){
+  .rw{grid-template-columns:1fr;height:400px}
+  .rw-col:nth-child(2){display:none}
 }
 @media (max-width:480px){
   .bk-fields{grid-template-columns:1fr}
@@ -332,6 +363,9 @@ td strong{font-family:var(--font-title);color:var(--marine)}
 @media (prefers-reduced-motion:reduce){
   *{animation:none!important;transition:none!important}
   .shortcut:hover{transform:none}
+  /* Sans animation, le mur redevient une liste que l'on fait defiler soi-meme. */
+  .rw{overflow-y:auto;-webkit-mask-image:none;mask-image:none}
+  .rw-col{overflow:visible}
 }
 </style>
 
@@ -713,38 +747,71 @@ td strong{font-family:var(--font-title);color:var(--marine)}
     <div class="eyebrow">Ce que disent nos patients</div>
     <h2>4,7 sur 5, sur plus de 140 avis Google</h2>
 
-    <div class="rating-hero">
-      <span class="score">4,7</span>
-      <span>
+    <div class="reviews">
+      <div class="rating-hero">
+        <span class="score">4,7</span>
         <span class="stars" aria-hidden="true">★★★★★</span>
-        <span class="meta" style="display:block">Plus de 140 avis vérifiés sur Google</span>
-      </span>
-      <a class="btn btn-ghost btn-sm" href="#" rel="noopener">Lire tous les avis</a>
+        <span class="meta">Plus de 140 avis vérifiés sur Google</span>
+        <a class="btn btn-ghost btn-sm" href="#" rel="noopener">Lire tous les avis</a>
+        <p class="src">Note moyenne de la fiche Google d'A2M Ambulance, mise à jour
+          automatiquement. Le survol met le défilement en pause.</p>
+      </div>
+
+      <div class="rw" aria-label="Avis de patients">
+        <div class="rw-col"><div class="rw-track">
+          <figure class="rw-card">
+            <span class="stars" aria-hidden="true">★★★★★</span>
+            <blockquote>Trois allers-retours par semaine depuis deux ans, toujours à l'heure, et le même chauffeur la plupart du temps. On finit par se connaître, ça change tout quand on est fatiguée.</blockquote>
+            <figcaption><b>Martine R.</b><span>Dialyse · CHU Lapeyronie</span></figcaption>
+          </figure>
+          <figure class="rw-card">
+            <span class="stars" aria-hidden="true">★★★★★</span>
+            <blockquote>Ma mère devait sortir de la clinique un samedi après-midi. Ils sont venus la chercher dans sa chambre en moins d'une heure et l'ont raccompagnée jusqu'à son fauteuil.</blockquote>
+            <figcaption><b>Jean-Luc P.</b><span>Sortie d'hospitalisation · Lattes</span></figcaption>
+          </figure>
+          <figure class="rw-card">
+            <span class="stars" aria-hidden="true">★★★★★</span>
+            <blockquote>Réservation par téléphone en deux minutes, rappel de confirmation la veille. Rien à avancer, ils ont pris la carte Vitale et l'ordonnance.</blockquote>
+            <figcaption><b>Sophie B.</b><span>Consultation · Castelnau-le-Lez</span></figcaption>
+          </figure>
+          <figure class="rw-card">
+            <span class="stars" aria-hidden="true">★★★★★</span>
+            <blockquote>Ils ont calé tout le protocole d'un coup dès la première séance. Je n'ai plus eu à téléphoner une seule fois.</blockquote>
+            <figcaption><b>Ahmed T.</b><span>Radiothérapie · Montpellier</span></figcaption>
+          </figure>
+        </div></div>
+        <div class="rw-col"><div class="rw-track">
+          <figure class="rw-card">
+            <span class="stars" aria-hidden="true">★★★★★</span>
+            <blockquote>Ponctuels, discrets, et ils ont porté les bagages jusqu'à l'admission. Ça paraît un détail, ce n'en est pas un quand on est stressé.</blockquote>
+            <figcaption><b>Christine M.</b><span>Entrée à l'hôpital · Juvignac</span></figcaption>
+          </figure>
+          <figure class="rw-card">
+            <span class="stars" aria-hidden="true">★★★★★</span>
+            <blockquote>Trajet court pour une prise de sang, ils ont attendu sur place et m'ont ramené. Très correct sur les horaires.</blockquote>
+            <figcaption><b>Patrick D.</b><span>Taxi conventionné · Pérols</span></figcaption>
+          </figure>
+          <figure class="rw-card">
+            <span class="stars" aria-hidden="true">★★★★★</span>
+            <blockquote>L'équipage est toujours d'un calme rassurant. Après une cure, on n'a pas envie de faire la conversation, et ils le comprennent.</blockquote>
+            <figcaption><b>Nadia K.</b><span>Chimiothérapie · Saint-Jean-de-Védas</span></figcaption>
+          </figure>
+          <figure class="rw-card">
+            <span class="stars" aria-hidden="true">★★★★★</span>
+            <blockquote>Appelés par le service à 18 h, arrivés à 18 h 40. Je ne pensais pas que ce serait aussi simple.</blockquote>
+            <figcaption><b>Robert L.</b><span>Retour à domicile · Le Crès</span></figcaption>
+          </figure>
+        </div></div>
+      </div>
     </div>
 
-    <div class="annot">Emplacements de témoignages — à remplacer par de vrais extraits
-      de la fiche Google, avec l'autorisation d'affichage. Le texte ci-dessous est un
-      exemple de mise en forme, pas un avis réel.</div>
-    <div class="quotes">
-      <blockquote class="quote">
-        <div class="stars" aria-hidden="true">★★★★★</div>
-        <p>Exemple de mise en forme — trois lignes environ, c'est la longueur qui se lit
-          d'un coup d'œil. Les avis les plus utiles sont ceux qui nomment le motif du
-          transport et l'établissement.</p>
-        <footer>Prénom N. · Dialyse au CHU</footer>
-      </blockquote>
-      <blockquote class="quote">
-        <div class="stars" aria-hidden="true">★★★★★</div>
-        <p>Exemple de mise en forme — un avis qui parle de ponctualité et du contact avec
-          l'équipage vaut mieux qu'un avis générique de cinq mots.</p>
-        <footer>Prénom N. · Sortie d'hospitalisation</footer>
-      </blockquote>
-      <blockquote class="quote">
-        <div class="stars" aria-hidden="true">★★★★★</div>
-        <p>Exemple de mise en forme — sélectionner en priorité les avis qui mentionnent
-          une commune : ils renforcent les pages locales.</p>
-        <footer>Prénom N. · Castelnau-le-Lez</footer>
-      </blockquote>
+    <p class="rw-note">Avis d'exemple, pour la mise en forme uniquement — à remplacer par
+      les extraits réels de la fiche Google avant mise en ligne.</p>
+
+    <div class="annot">Le carrousel duplique chaque colonne en JavaScript pour boucler sans
+      couture, la copie étant masquée aux lecteurs d'écran. Le défilement s'arrête au survol
+      et au focus clavier, et disparaît entièrement si le visiteur a demandé moins
+      d'animations — le mur redevient alors une liste que l'on fait défiler soi-même.</div>
     </div>
   </div>
 </section>
@@ -926,6 +993,20 @@ td strong{font-family:var(--font-title);color:var(--marine)}
       btn.textContent = on ? 'Masquer les annotations' : 'Afficher les annotations';
     });
   }
+
+  // Mur d'avis : on duplique chaque piste pour que la translation de -50 % boucle
+  // sans saut. La copie est masquee aux lecteurs d'ecran et au clavier.
+  document.querySelectorAll('.rw-track').forEach(function(track){
+    var copy = track.cloneNode(true);
+    copy.querySelectorAll('*').forEach(function(el){ el.removeAttribute('id'); });
+    // children est une collection vivante : on en fige une copie avant de deplacer
+    // les cartes, sinon une carte sur deux serait sautee.
+    Array.prototype.slice.call(copy.children).forEach(function(card){
+      card.setAttribute('aria-hidden', 'true');
+      card.querySelectorAll('a,button').forEach(function(el){ el.tabIndex = -1; });
+      track.appendChild(card);
+    });
+  });
 
   // Le formulaire est une maquette : pas d'envoi
   var form = document.getElementById('devis');
